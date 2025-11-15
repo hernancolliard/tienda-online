@@ -4,7 +4,11 @@
 
 @layer base {
   body {
-    background-color: theme('colors.dark-blue');
-    color: theme('colors.beige');
+    /* Fondo degradado sutil para dar profundidad */
+    background-color: #EAE2B7; /* Fallback */
+    background-image: linear-gradient(to top, #EAE2B7, #fcfbf5);
+    
+    /* Color de texto por defecto para un buen contraste */
+    color: #003049;
   }
 }
