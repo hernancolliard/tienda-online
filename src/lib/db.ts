@@ -1,13 +1,12 @@
 import { Pool } from 'pg';
 
 // Crea un "pool" de conexiones.
-// Leerá los detalles de conexión de la variable de entorno DATABASE_URL.
-// En desarrollo, necesitarás crear un archivo .env.local para definir esta variable.
-// En producción (en Render), la configurarás en las variables de entorno de tu servicio.
+// Usará la variable de entorno POSTGRES_URL (proveída por Vercel) si existe,
+// de lo contrario, usará DATABASE_URL (para desarrollo local).
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.POSTGRES_URL || process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false // Requerido para las conexiones de base de datos en Render
+    rejectUnauthorized: false // Requerido para conexiones a bases de datos serverless como Vercel o Render
   }
 });
 
