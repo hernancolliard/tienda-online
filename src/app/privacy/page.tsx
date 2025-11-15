@@ -20,7 +20,7 @@ const PrivacyPolicyPage = () => {
           Cookies y Web Beacons
         </h2>
         <p>
-          Como cualquier otro sitio web, Tu Tienda Online utiliza 'cookies'. Estas cookies se utilizan para almacenar información, incluidas las preferencias de los visitantes, y las páginas del sitio web a las que el visitante accedió o visitó.
+          Como cualquier otro sitio web, Tu Tienda Online utiliza &apos;cookies&apos;. Estas cookies se utilizan para almacenar información, incluidas las preferencias de los visitantes, y las páginas del sitio web a las que el visitante accedió o visitó.
         </p>
         <h2 className="text-2xl font-semibold mt-6" style={{ color: '#D62828' }}>
           Consentimiento
