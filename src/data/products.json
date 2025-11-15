@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Laptop Pro",
+    "price": 1200,
+    "description": "Una laptop potente para profesionales y creativos.",
+    "imageUrl": "https://placehold.co/600x400/EEE/31343C?text=Laptop+Pro"
+  },
+  {
+    "id": 2,
+    "name": "Smartphone X",
+    "price": 800,
+    "description": "El último smartphone con una cámara increíble.",
+    "imageUrl": "https://placehold.co/600x400/EEE/31343C?text=Smartphone+X"
+  },
+  {
+    "id": 3,
+    "name": "Auriculares Inalámbricos",
+    "price": 150,
+    "description": "Calidad de sonido superior sin cables.",
+    "imageUrl": "https://placehold.co/600x400/EEE/31343C?text=Auriculares"
+  },
+  {
+    "id": 4,
+    "name": "Smartwatch 2",
+    "price": 250,
+    "description": "Mantente conectado y monitorea tu salud.",
+    "imageUrl": "https://placehold.co/600x400/EEE/31343C?text=Smartwatch+2"
+  }
+]
