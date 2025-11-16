@@ -64,14 +64,14 @@ export default function Sidebar() {
       </div>
 
       <aside
-        className={`group fixed top-0 left-0 h-screen bg-[#003049] text-[#EAE2B7] shadow-xl transition-all duration-300 ease-in-out z-50 flex flex-col
-          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+        className={`group fixed top-0 left-0 h-screen bg-[#003049] text-[#EAE2B7] shadow-xl transition-all duration-300 ease-in-out z-[999] flex flex-col
+          ${isMobileMenuOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64'}
           md:translate-x-0 md:w-20 md:hover:w-64`}
       >
         {/* Overlay for mobile menu */}
         {isMobileMenuOpen && (
           <div
-            className="fixed inset-0 bg-black opacity-50 z-30 md:hidden"
+            className="fixed inset-0 bg-black opacity-50 z-[998] md:hidden"
             onClick={() => setIsMobileMenuOpen(false)}
           ></div>
         )}
