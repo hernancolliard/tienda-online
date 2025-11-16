@@ -53,6 +53,14 @@ export default function Sidebar() {
 
   return (
     <>
+      {/* Overlay for mobile menu */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-[998] md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        ></div>
+      )}
+
       {/* Hamburger menu button for mobile */}
       <div className="md:hidden fixed top-4 left-4 z-50">
         <button
@@ -68,13 +76,6 @@ export default function Sidebar() {
           ${isMobileMenuOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64'}
           md:translate-x-0 md:w-20 md:hover:w-64`}
       >
-        {/* Overlay for mobile menu */}
-        {isMobileMenuOpen && (
-          <div
-            className="fixed inset-0 bg-black opacity-50 z-[998] md:hidden"
-            onClick={() => setIsMobileMenuOpen(false)}
-          ></div>
-        )}
 
         {/* Spacer for the hamburger icon on mobile */}
         <div className="h-16 md:hidden"></div>
