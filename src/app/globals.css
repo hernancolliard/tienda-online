@@ -4,11 +4,22 @@
 
 @layer base {
   body {
-    /* Fondo degradado sutil para dar profundidad */
-    background-color: #EAE2B7; /* Fallback */
-    background-image: linear-gradient(to top, #EAE2B7, #fcfbf5);
-    
-    /* Color de texto por defecto para un buen contraste */
-    color: #003049;
+    background-color: #003049; /* Fallback color */
+    color: #EAE2B7; /* Default text color for better contrast on dark bg */
+    background: linear-gradient(315deg, #002235, #003049, #004a70);
+    background-size: 400% 400%;
+    animation: move-bg 15s ease-in-out infinite;
+  }
+}
+
+@keyframes move-bg {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
