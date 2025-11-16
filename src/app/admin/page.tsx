@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import CategoryManager from "@/components/CategoryManager"
 import ProductManager from "@/components/ProductManager"
+import FeaturedManager from "@/components/FeaturedManager"
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions)
@@ -16,12 +17,16 @@ export default async function AdminPage() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Panel de Administración</h1>
       
-      {/* Componente para gestionar categorías */}
-      <CategoryManager />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div>
+          <CategoryManager />
+          <FeaturedManager />
+        </div>
+        <div>
+          <ProductManager />
+        </div>
+      </div>
 
-      {/* Componente para gestionar productos */}
-      <ProductManager />
-      
     </div>
   )
 }

@@ -3,15 +3,24 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    // Unir con la tabla de categorías para obtener el nombre de la categoría
-    const { rows } = await db.query(`
+    const { searchParams } = req.nextUrl;
+    const featuredOnly = searchParams.get('featured') === 'true';
+
+    let query = `
       SELECT p.*, c.name as category_name 
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
-      ORDER BY p.created_at DESC
-    `);
+    `;
+
+    if (featuredOnly) {
+      query += ' WHERE p.is_featured = true';
+    }
+
+    query += ' ORDER BY p.created_at DESC';
+
+    const { rows } = await db.query(query);
     return NextResponse.json(rows);
   } catch (error) {
     console.error('API Error:', error);

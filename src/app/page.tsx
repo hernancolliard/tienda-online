@@ -7,9 +7,8 @@ import path from 'path';
 // This is a Server Component, so we can fetch data directly.
 async function getProducts(): Promise<Product[]> {
   try {
-    // We add a random order to simulate a "featured" list.
-    // In a real app, you might have a 'featured' flag.
-    const { rows } = await db.query('SELECT * FROM products ORDER BY RANDOM()');
+    // Fetch only products marked as featured.
+    const { rows } = await db.query('SELECT * FROM products WHERE is_featured = true ORDER BY created_at DESC');
     // The database driver returns decimal types as strings, so we need to parse them.
     return rows.map(product => ({
       ...product,
