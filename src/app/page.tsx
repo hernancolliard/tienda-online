@@ -10,7 +10,11 @@ async function getProducts(): Promise<Product[]> {
     // We add a random order to simulate a "featured" list.
     // In a real app, you might have a 'featured' flag.
     const { rows } = await db.query('SELECT * FROM products ORDER BY RANDOM()');
-    return rows;
+    // The database driver returns decimal types as strings, so we need to parse them.
+    return rows.map(product => ({
+      ...product,
+      price: parseFloat(product.price),
+    }));
   } catch (error) {
     console.error('DATABASE_FETCH_ERROR:', error);
     // Return an empty array on error to prevent the page from crashing.
