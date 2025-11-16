@@ -88,7 +88,7 @@ export default function Sidebar() {
                 <li key={link.name} className="w-full">
                   <Link href={link.href} className={`flex items-center justify-center group-hover:justify-start w-full h-16 px-6 my-2 transition-colors duration-200 relative ${isActive ? 'bg-[#F77F00] text-white' : 'hover:bg-[#004a70]'}`}>
                     <link.icon className="w-8 h-8 flex-shrink-0" />
-                    <span className={`ml-4 text-lg font-medium whitespace-nowrap transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                    <span className={`ml-4 text-lg font-medium whitespace-nowrap transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'} md:group-hover:opacity-100`}>
                       {link.name}
                     </span>
                     {isActive && (
@@ -106,13 +106,13 @@ export default function Sidebar() {
           {status === 'authenticated' ? (
             <div className="px-6 py-4">
               <div className="flex items-center mb-2">
-                <p className={`ml-4 text-sm font-medium whitespace-nowrap truncate transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                <p className={`ml-4 text-sm font-medium whitespace-nowrap truncate transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'} md:group-hover:opacity-100`}>
                   {user?.name || user?.email}
                 </p>
               </div>
               <button onClick={() => signOut({ callbackUrl: '/' })} className="flex items-center justify-center group-hover:justify-start w-full h-16 px-6 transition-colors duration-200 hover:bg-red-800 rounded-md">
                 <FiLogOut className="w-8 h-8 flex-shrink-0" />
-                <span className={`ml-4 text-lg font-medium whitespace-nowrap transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                <span className={`ml-4 text-lg font-medium whitespace-nowrap transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'} md:group-hover:opacity-100`}>
                   Salir
                 </span>
               </button>
@@ -120,7 +120,7 @@ export default function Sidebar() {
           ) : (
             <Link href="/login" className="flex items-center justify-center group-hover:justify-start w-full h-16 px-6 transition-colors duration-200 hover:bg-[#004a70] rounded-md">
               <FiLogIn className="w-8 h-8 flex-shrink-0" />
-              <span className={`ml-4 text-lg font-medium whitespace-nowrap transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+              <span className={`ml-4 text-lg font-medium whitespace-nowrap transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'} md:group-hover:opacity-100`}>
                 Entrar
               </span>
             </Link>
