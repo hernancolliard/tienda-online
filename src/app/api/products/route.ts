@@ -33,6 +33,12 @@ export async function GET(req: NextRequest) {
     query += ' ORDER BY p.created_at DESC';
 
     const { rows } = await db.query(query, queryParams);
+
+    // Log the images field of the first product for debugging
+    if (rows.length > 0) {
+      console.log('First product images field:', rows[0].images);
+    }
+
     return NextResponse.json(rows);
   } catch (error) {
     console.error('API Error:', error);
