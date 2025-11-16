@@ -64,7 +64,7 @@ export default function Sidebar() {
       </div>
 
       <aside
-        className={`group fixed top-0 left-0 h-screen bg-[#003049] text-[#EAE2B7] shadow-xl transition-all duration-300 ease-in-out z-40 flex flex-col
+        className={`group fixed top-0 left-0 h-screen bg-[#003049] text-[#EAE2B7] shadow-xl transition-all duration-300 ease-in-out z-50 flex flex-col
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
           md:translate-x-0 md:w-20 md:hover:w-64`}
       >
