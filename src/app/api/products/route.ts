@@ -37,6 +37,8 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
+    console.log('Received request body:', JSON.stringify(body, null, 2)); // Log para depuración
+
     const {
       name,
       description,
@@ -46,6 +48,8 @@ export async function POST(req: NextRequest) {
       stock_quantity,
       sizes,
     } = body;
+
+    console.log('Parsed images from body:', images); // Log para depuración
 
     // Validación simple
     if (!name || !price || !category_id) {
