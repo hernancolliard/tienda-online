@@ -34,12 +34,30 @@ export async function GET(req: NextRequest) {
 
     const { rows } = await db.query(query, queryParams);
 
-    // Log the images field of the first product for debugging
-    if (rows.length > 0) {
-      console.log('First product images field:', rows[0].images);
-    }
+    const processedRows = rows.map(product => {
+      // Ensure price is a number
+      const price = parseFloat(product.price);
 
-    return NextResponse.json(rows);
+      // Ensure images are valid data URIs if they are base64 strings
+      const images = Array.isArray(product.images)
+        ? product.images.map((img: string) => {
+            // Check if it's a base64 string and doesn't already have a data URI prefix
+            if (typeof img === 'string' && !img.startsWith('http') && !img.startsWith('data:')) {
+              // Assuming JPEG for now, could be made more dynamic if needed
+              return `data:image/jpeg;base64,${img}`;
+            }
+            return img;
+          })
+        : []; // Default to empty array if images is not an array
+
+      return {
+        ...product,
+        price,
+        images,
+      };
+    });
+
+    return NextResponse.json(processedRows);
   } catch (error) {
     console.error('API Error:', error);
     return NextResponse.json({ message: 'Failed to fetch products' }, { status: 500 });
