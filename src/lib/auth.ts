@@ -22,7 +22,10 @@ export const authOptions: AuthOptions = {
         password: {  label: "Password", type: "password" }
       },
       async authorize(credentials) {
+        console.log('Attempting to authorize user:', credentials?.email);
+
         if (!credentials?.email || !credentials?.password) {
+          console.log('Missing credentials.');
           return null;
         }
 
@@ -31,16 +34,20 @@ export const authOptions: AuthOptions = {
         const user = rows[0];
 
         if (!user || !user.password) {
+          console.log('User not found in database or user has no password.');
           return null;
         }
+        console.log('User found in database:', user.email);
 
         // Comprobar si la contraseña coincide
         const isValidPassword = await bcrypt.compare(credentials.password, user.password);
 
         if (!isValidPassword) {
+          console.log('Password validation failed.');
           return null;
         }
 
+        console.log('Password validation successful. Authorizing user.');
         // Devolver el objeto de usuario si todo es correcto
         return {
           id: user.id,
