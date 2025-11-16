@@ -46,7 +46,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
 
           <div className="text-right mt-4">
             <span className="text-2xl font-extrabold" style={{ color: '#F77F00' }}>
-              ${product.price.toFixed(2)}
+              ${parseFloat(product.price).toFixed(2)}
             </span>
           </div>
         </div>
