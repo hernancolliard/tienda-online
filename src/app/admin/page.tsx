@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import CategoryManager from "@/components/CategoryManager"
+import ProductManager from "@/components/ProductManager"
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions)
@@ -18,7 +19,9 @@ export default async function AdminPage() {
       {/* Componente para gestionar categorías */}
       <CategoryManager />
 
-      {/* Aquí se añadirán más componentes de gestión en el futuro */}
+      {/* Componente para gestionar productos */}
+      <ProductManager />
+      
     </div>
   )
 }
