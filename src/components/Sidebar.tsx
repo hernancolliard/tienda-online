@@ -64,8 +64,8 @@ export default function Sidebar() {
       </div>
 
       <aside
-        className={`fixed top-0 left-0 h-screen bg-[#003049] text-[#EAE2B7] shadow-xl transition-all duration-300 ease-in-out z-40 flex flex-col
-          ${isMobileMenuOpen ? 'w-64' : 'w-0 md:w-20 md:hover:w-64'}
+        className={`group fixed top-0 left-0 h-screen bg-[#003049] text-[#EAE2B7] shadow-xl transition-all duration-300 ease-in-out z-40 flex flex-col
+          ${isMobileMenuOpen ? 'w-64' : 'w-0'}
           md:w-20 md:hover:w-64`}
       >
         {/* Overlay for mobile menu */}
