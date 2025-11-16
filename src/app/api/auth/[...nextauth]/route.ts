@@ -60,7 +60,9 @@ const authOptions: AuthOptions = {
       // Al iniciar sesión, añadimos el id y el rol del usuario al token
       if (user) {
         token.id = user.id;
-        token.role = user.role;
+        if (typeof user.role === 'string') {
+          token.role = user.role;
+        }
       }
       return token;
     },
