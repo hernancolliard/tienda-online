@@ -70,7 +70,7 @@ export default function ProductList({ products }: ProductListProps) {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="relative aspect-square">
                           <Image
-                            src={selectedProduct.imageUrl}
+                            src={selectedProduct.images[0]}
                             alt={selectedProduct.name}
                             fill
                             className="object-cover rounded-lg"
@@ -86,11 +86,11 @@ export default function ProductList({ products }: ProductListProps) {
                           </Dialog.Title>
                           <div className="mt-4 flex-grow">
                             <p className="text-sm text-gray-600">{selectedProduct.description}</p>
-                            {selectedProduct.talle && selectedProduct.talle.length > 0 && (
+                            {selectedProduct.sizes && selectedProduct.sizes.length > 0 && (
                               <div className="mt-4">
                                 <h4 className="text-sm font-semibold" style={{ color: '#D62828' }}>Talles disponibles:</h4>
                                 <div className="flex flex-wrap gap-2 mt-2">
-                                  {selectedProduct.talle.map(t => (
+                                  {selectedProduct.sizes.map(t => (
                                     <span key={t} className="text-xs font-medium px-3 py-1 rounded-full" style={{ backgroundColor: '#EAE2B7', color: '#003049' }}>
                                       {t}
                                     </span>

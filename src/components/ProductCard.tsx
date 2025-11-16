@@ -16,7 +16,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
         {/* Image Container */}
         <div className="relative w-1/3 h-auto aspect-square flex-shrink-0">
           <Image
-            src={product.imageUrl}
+            src={product.images[0]}
             alt={product.name}
             fill
             className="object-cover rounded-lg"
@@ -30,11 +30,11 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
               {product.name}
             </h3>
             
-            {product.talle && product.talle.length > 0 && (
+            {product.sizes && product.sizes.length > 0 && (
               <div className="mt-2">
                 <span className="text-sm font-semibold" style={{ color: '#D62828' }}>Talles:</span>
                 <div className="flex flex-wrap gap-2 mt-1">
-                  {product.talle.map(t => (
+                  {product.sizes.map(t => (
                     <span key={t} className="text-xs font-medium px-2 py-1 rounded-full" style={{ backgroundColor: '#EAE2B7', color: '#003049' }}>
                       {t}
                     </span>

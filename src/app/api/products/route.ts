@@ -7,20 +7,32 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = req.nextUrl;
     const featuredOnly = searchParams.get('featured') === 'true';
+    const categoryId = searchParams.get('category_id');
 
     let query = `
-      SELECT p.*, c.name as category_name 
+      SELECT p.*, c.name as category_name
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
     `;
+    const queryParams = [];
+    const conditions = [];
 
     if (featuredOnly) {
-      query += ' WHERE p.is_featured = true';
+      conditions.push('p.is_featured = true');
+    }
+
+    if (categoryId) {
+      conditions.push('p.category_id = $1');
+      queryParams.push(categoryId);
+    }
+
+    if (conditions.length > 0) {
+      query += ' WHERE ' + conditions.join(' AND ');
     }
 
     query += ' ORDER BY p.created_at DESC';
 
-    const { rows } = await db.query(query);
+    const { rows } = await db.query(query, queryParams);
     return NextResponse.json(rows);
   } catch (error) {
     console.error('API Error:', error);

@@ -1,17 +1,15 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { FiHome, FiSettings, FiTag, FiLogIn, FiLogOut } from 'react-icons/fi';
 
-const baseNavLinks = [
-  { name: 'Inicio', href: '/', icon: FiHome },
-  { name: 'Categoría 1', href: '/category/1', icon: FiTag },
-  { name: 'Categoría 2', href: '/category/2', icon: FiTag },
-  { name: 'Categoría 3', href: '/category/3', icon: FiTag },
-  { name: 'Categoría 4', href: '/category/4', icon: FiTag },
-];
+interface Category {
+  id: string;
+  name: string;
+}
 
 const adminLink = { name: 'Admin', href: '/admin', icon: FiSettings };
 
@@ -19,6 +17,35 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const user = session?.user;
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch('/api/categories');
+        if (res.ok) {
+          const data: Category[] = await res.json();
+          setCategories(data);
+        } else {
+          console.error('Failed to fetch categories');
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const categoryNavLinks = categories.map(category => ({
+    name: category.name,
+    href: `/category/${category.id}`,
+    icon: FiTag,
+  }));
+
+  const baseNavLinks = [
+    { name: 'Inicio', href: '/', icon: FiHome },
+    ...categoryNavLinks,
+  ];
 
   // Only show admin link if user has the 'admin' role
   const navLinks = user?.role === 'admin' ? [adminLink, ...baseNavLinks] : baseNavLinks;
