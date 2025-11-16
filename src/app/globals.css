@@ -23,3 +23,19 @@
     background-position: 0% 50%;
   }
 }
+
+/* Custom styles for main content to account for sidebar */
+.main-content {
+  margin-left: 0; /* Default for mobile */
+}
+
+@media (min-width: 768px) { /* md breakpoint */
+  .main-content {
+    margin-left: 5rem; /* Corresponds to w-20 of the sidebar */
+  }
+
+  /* Adjust margin when sidebar expands on hover */
+  aside:hover + .main-content {
+    margin-left: 16rem; /* Corresponds to w-64 of the sidebar */
+  }
+}

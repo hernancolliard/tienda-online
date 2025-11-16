@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <Sidebar />
-          <div className="ml-20 transition-all duration-300">
+          <div className="main-content transition-all duration-300">
             <main className="flex-grow min-h-screen p-8">
               {children}
             </main>

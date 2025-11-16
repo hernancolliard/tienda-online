@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
-import { FiHome, FiSettings, FiTag, FiLogIn, FiLogOut } from 'react-icons/fi';
+import { FiHome, FiSettings, FiTag, FiLogIn, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
 
 interface Category {
   id: string;
@@ -18,6 +18,7 @@ export default function Sidebar() {
   const { data: session, status } = useSession();
   const user = session?.user;
   const [categories, setCategories] = useState<Category[]>([]);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -51,56 +52,81 @@ export default function Sidebar() {
   const navLinks = user?.role === 'admin' ? [adminLink, ...baseNavLinks] : baseNavLinks;
 
   return (
-    <aside
-      className="group fixed top-0 left-0 h-screen w-20 hover:w-64 bg-[#003049] text-[#EAE2B7] shadow-xl transition-all duration-300 ease-in-out z-50 flex flex-col"
-    >
-      {/* Main Navigation */}
-      <nav className="w-full mt-10 flex-grow">
-        <ul>
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href;
-            return (
-              <li key={link.name} className="w-full">
-                <Link href={link.href} className={`flex items-center justify-center group-hover:justify-start w-full h-16 px-6 my-2 transition-colors duration-200 relative ${isActive ? 'bg-[#F77F00] text-white' : 'hover:bg-[#004a70]'}`}>
-                  <link.icon className="w-8 h-8 flex-shrink-0" />
-                  <span className="ml-4 text-lg font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100 whitespace-nowrap">
-                    {link.name}
-                  </span>
-                  {isActive && (
-                     <div className="absolute left-0 top-0 h-full w-1 bg-white"></div>
-                  )}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-
-      {/* Session Management */}
-      <div className="w-full mb-4">
-        {status === 'authenticated' ? (
-          <div className="px-6 py-4">
-            <div className="flex items-center mb-2">
-              <p className="ml-4 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100 whitespace-nowrap truncate">
-                {user?.name || user?.email}
-              </p>
-            </div>
-            <button onClick={() => signOut({ callbackUrl: '/' })} className="flex items-center justify-center group-hover:justify-start w-full h-16 px-6 transition-colors duration-200 hover:bg-red-800 rounded-md">
-              <FiLogOut className="w-8 h-8 flex-shrink-0" />
-              <span className="ml-4 text-lg font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100 whitespace-nowrap">
-                Salir
-              </span>
-            </button>
-          </div>
-        ) : (
-          <Link href="/login" className="flex items-center justify-center group-hover:justify-start w-full h-16 px-6 transition-colors duration-200 hover:bg-[#004a70] rounded-md">
-            <FiLogIn className="w-8 h-8 flex-shrink-0" />
-            <span className="ml-4 text-lg font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100 whitespace-nowrap">
-              Entrar
-            </span>
-          </Link>
-        )}
+    <>
+      {/* Hamburger menu button for mobile */}
+      <div className="md:hidden fixed top-4 left-4 z-50">
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="p-2 text-[#EAE2B7] bg-[#003049] rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F77F00]"
+        >
+          {isMobileMenuOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
+        </button>
       </div>
-    </aside>
+
+      <aside
+        className={`fixed top-0 left-0 h-screen bg-[#003049] text-[#EAE2B7] shadow-xl transition-all duration-300 ease-in-out z-40 flex flex-col
+          ${isMobileMenuOpen ? 'w-64' : 'w-0 md:w-20 md:hover:w-64'}
+          md:w-20 md:hover:w-64`}
+      >
+        {/* Overlay for mobile menu */}
+        {isMobileMenuOpen && (
+          <div
+            className="fixed inset-0 bg-black opacity-50 z-30 md:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          ></div>
+        )}
+
+        {/* Spacer for the hamburger icon on mobile */}
+        <div className="h-16 md:hidden"></div>
+
+        {/* Main Navigation */}
+        <nav className="w-full mt-10 flex-grow">
+          <ul>
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <li key={link.name} className="w-full">
+                  <Link href={link.href} className={`flex items-center justify-center group-hover:justify-start w-full h-16 px-6 my-2 transition-colors duration-200 relative ${isActive ? 'bg-[#F77F00] text-white' : 'hover:bg-[#004a70]'}`}>
+                    <link.icon className="w-8 h-8 flex-shrink-0" />
+                    <span className="ml-4 text-lg font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100 whitespace-nowrap">
+                      {link.name}
+                    </span>
+                    {isActive && (
+                       <div className="absolute left-0 top-0 h-full w-1 bg-white"></div>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        {/* Session Management */}
+        <div className="w-full mb-4">
+          {status === 'authenticated' ? (
+            <div className="px-6 py-4">
+              <div className="flex items-center mb-2">
+                <p className="ml-4 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100 whitespace-nowrap truncate">
+                  {user?.name || user?.email}
+                </p>
+              </div>
+              <button onClick={() => signOut({ callbackUrl: '/' })} className="flex items-center justify-center group-hover:justify-start w-full h-16 px-6 transition-colors duration-200 hover:bg-red-800 rounded-md">
+                <FiLogOut className="w-8 h-8 flex-shrink-0" />
+                <span className="ml-4 text-lg font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100 whitespace-nowrap">
+                  Salir
+                </span>
+              </button>
+            </div>
+          ) : (
+            <Link href="/login" className="flex items-center justify-center group-hover:justify-start w-full h-16 px-6 transition-colors duration-200 hover:bg-[#004a70] rounded-md">
+              <FiLogIn className="w-8 h-8 flex-shrink-0" />
+              <span className="ml-4 text-lg font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100 whitespace-nowrap">
+                Entrar
+              </span>
+            </Link>
+          )}
+        </div>
+      </aside>
+    </>
   );
 }
