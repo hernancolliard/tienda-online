@@ -1,6 +1,6 @@
 import NextAuth, { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { PgAdapter } from '@auth/pg-adapter';
+import { PostgresAdapter } from '@auth/pg-adapter';
 import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
 
@@ -12,8 +12,8 @@ const pool = new Pool({
   },
 });
 
-export const authOptions: AuthOptions = {
-  adapter: PgAdapter(pool),
+const authOptions: AuthOptions = {
+  adapter: PostgresAdapter(pool),
   providers: [
     CredentialsProvider({
       name: 'Credentials',
