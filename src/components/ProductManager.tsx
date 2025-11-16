@@ -2,11 +2,18 @@
 
 import { useState, useEffect, FormEvent } from 'react';
 
+// Extiende la interfaz para incluir todos los campos del formulario
 interface Product {
   id: number;
   name: string;
+  description: string;
   price: number;
-  category_name: string;
+  images: string[];
+  category_id: number;
+  category_name?: string; // El GET principal lo trae
+  stock_quantity: number;
+  sizes: string[];
+  is_featured: boolean;
 }
 
 interface Category {
@@ -30,7 +37,10 @@ export default function ProductManager() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // State para el formulario y para saber si estamos editando
   const [formState, setFormState] = useState(initialFormState);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   const fetchData = async () => {
     try {
@@ -39,9 +49,7 @@ export default function ProductManager() {
         fetch('/api/products'),
         fetch('/api/categories'),
       ]);
-      if (!productsRes.ok || !categoriesRes.ok) {
-        throw new Error('No se pudieron cargar los datos.');
-      }
+      if (!productsRes.ok || !categoriesRes.ok) throw new Error('No se pudieron cargar los datos.');
       const productsData = await productsRes.json();
       const categoriesData = await categoriesRes.json();
       setProducts(productsData);
@@ -62,54 +70,94 @@ export default function ProductManager() {
     setFormState(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const handleAddProduct = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    const newProduct = {
+    const productData = {
       ...formState,
       price: parseFloat(formState.price),
       stock_quantity: parseInt(formState.stock_quantity, 10),
       category_id: parseInt(formState.category_id, 10),
       images: formState.images.split(',').map(url => url.trim()).filter(url => url),
       sizes: formState.sizes.split(',').map(s => s.trim()).filter(s => s),
+      is_featured: editingProduct ? editingProduct.is_featured : false,
     };
 
-    if (!newProduct.name || !newProduct.price || !newProduct.category_id) {
+    if (!productData.name || !productData.price || !productData.category_id) {
       return setError('Nombre, precio y categoría son requeridos.');
     }
 
+    const url = editingProduct ? `/api/products/${editingProduct.id}` : '/api/products';
+    const method = editingProduct ? 'PUT' : 'POST';
+
     try {
-      const res = await fetch('/api/products', {
-        method: 'POST',
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newProduct),
+        body: JSON.stringify(productData),
       });
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message || 'No se pudo crear el producto.');
+        throw new Error(errorData.message || `No se pudo ${editingProduct ? 'actualizar' : 'crear'} el producto.`);
       }
 
-      await fetchData(); // Recargar datos
-      setIsModalOpen(false); // Cerrar modal
-      setFormState(initialFormState); // Resetear formulario
+      await fetchData();
+      closeModal();
     } catch (err: any) {
       setError(err.message);
     }
   };
-  
-  const openModal = () => {
+
+  const openModalForEdit = (product: Product) => {
     setError(null);
+    setEditingProduct(product);
+    setFormState({
+      name: product.name,
+      description: product.description || '',
+      price: String(product.price),
+      images: (product.images || []).join(', '),
+      category_id: String(product.category_id),
+      stock_quantity: String(product.stock_quantity),
+      sizes: (product.sizes || []).join(', '),
+    });
+    setIsModalOpen(true);
+  };
+
+  const openModalForAdd = () => {
+    setError(null);
+    setEditingProduct(null);
     setFormState(initialFormState);
     setIsModalOpen(true);
-  }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingProduct(null);
+    setFormState(initialFormState);
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!window.confirm('¿Estás seguro de que quieres eliminar este producto?')) return;
+    
+    try {
+      const res = await fetch(`/api/products/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'No se pudo eliminar el producto.');
+      }
+      await fetchData();
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md mt-8">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Gestionar Productos</h2>
-        <button onClick={openModal} className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+        <button onClick={openModalForAdd} className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
           Añadir Producto
         </button>
       </div>
@@ -133,7 +181,12 @@ export default function ProductManager() {
                   <td className="py-2 px-4 border-b text-center">{product.name}</td>
                   <td className="py-2 px-4 border-b text-center">{product.category_name}</td>
                   <td className="py-2 px-4 border-b text-center">${product.price}</td>
-                  <td className="py-2 px-4 border-b text-center">{/* Acciones */}</td>
+                  <td className="py-2 px-4 border-b text-center">
+                    <div className="flex justify-center gap-2">
+                      <button onClick={() => openModalForEdit(product)} className="text-sm text-blue-600 hover:text-blue-800">Editar</button>
+                      <button onClick={() => handleDelete(product.id)} className="text-sm text-red-600 hover:text-red-800">Eliminar</button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -144,8 +197,8 @@ export default function ProductManager() {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <h3 className="text-2xl font-bold mb-6">Añadir Nuevo Producto</h3>
-            <form onSubmit={handleAddProduct} className="space-y-4">
+            <h3 className="text-2xl font-bold mb-6">{editingProduct ? 'Editar Producto' : 'Añadir Nuevo Producto'}</h3>
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium mb-1">Nombre</label>
                 <input id="name" name="name" type="text" value={formState.name} onChange={handleInputChange} className="w-full p-2 border rounded-md" required />
@@ -178,8 +231,8 @@ export default function ProductManager() {
                 <textarea id="images" name="images" value={formState.images} onChange={handleInputChange} className="w-full p-2 border rounded-md" placeholder="https://ejemplo.com/img1.jpg, https://ejemplo.com/img2.jpg" />
               </div>
               <div className="flex justify-end gap-4 pt-4">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 bg-gray-300 rounded-md">Cancelar</button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md">Guardar Producto</button>
+                <button type="button" onClick={closeModal} className="px-4 py-2 bg-gray-300 rounded-md">Cancelar</button>
+                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md">{editingProduct ? 'Guardar Cambios' : 'Guardar Producto'}</button>
               </div>
             </form>
           </div>
