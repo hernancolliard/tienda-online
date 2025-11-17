@@ -130,6 +130,22 @@ export default function ProductManager() {
     }
   };
 
+  const handleDeleteImage = (index: number) => {
+    // Create new arrays with the image removed
+    const newImagePreviews = [...imagePreviews];
+    newImagePreviews.splice(index, 1);
+
+    const newBase64Images = [...formState.images];
+    newBase64Images.splice(index, 1);
+
+    // Update the state
+    setImagePreviews(newImagePreviews);
+    setFormState(prevState => ({
+      ...prevState,
+      images: newBase64Images,
+    }));
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -314,7 +330,17 @@ export default function ProductManager() {
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {imagePreviews.map((src, index) => (
-                    <img key={index} src={src} alt={`Preview ${index}`} className="w-24 h-24 object-cover rounded-md" />
+                    <div key={index} className="relative">
+                      <img src={src} alt={`Preview ${index}`} className="w-24 h-24 object-cover rounded-md" />
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteImage(index)}
+                        className="absolute top-0 right-0 transform -translate-y-1/2 translate-x-1/2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold"
+                        aria-label="Eliminar imagen"
+                      >
+                        X
+                      </button>
+                    </div>
                   ))}
                 </div>
               </div>
