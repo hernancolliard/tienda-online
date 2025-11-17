@@ -1,24 +1,28 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
-import { FiHome, FiSettings, FiTag, FiLogIn, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
+import { FiHome, FiSettings, FiTag, FiLogIn, FiLogOut } from 'react-icons/fi';
 
 interface Category {
   id: string;
   name: string;
 }
 
+interface SidebarProps {
+  isMobileMenuOpen: boolean;
+  setIsMobileMenuOpen: (isOpen: boolean) => void;
+}
+
 const adminLink = { name: 'Admin', href: '/admin', icon: FiSettings };
 
-export default function Sidebar() {
+export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: SidebarProps) {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const user = session?.user;
   const [categories, setCategories] = useState<Category[]>([]);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -56,29 +60,16 @@ export default function Sidebar() {
       {/* Overlay for mobile menu */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black opacity-50 z-[998] md:hidden"
+          className="fixed inset-0 bg-black opacity-50 z-40 md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         ></div>
       )}
-
-      {/* Hamburger menu button for mobile */}
-      <div className="md:hidden fixed top-4 left-4 z-50">
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 text-[#EAE2B7] bg-[#003049] rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F77F00]"
-        >
-          {isMobileMenuOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
-        </button>
-      </div>
 
       <aside
         className={`group fixed top-0 left-0 h-screen bg-[#003049] text-[#EAE2B7] shadow-xl transition-all duration-300 ease-in-out z-[999] flex flex-col
           ${isMobileMenuOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64'}
           md:translate-x-0 md:w-20 md:hover:w-64`}
       >
-
-        {/* Spacer for the hamburger icon on mobile */}
-        <div className="h-16 md:hidden"></div>
 
         {/* Main Navigation */}
         <nav className="w-full mt-10 flex-grow">

@@ -26,9 +26,9 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
       onClick={onClick}
       className="w-full text-left transition-transform duration-300 ease-in-out hover:-translate-y-2"
     >
-      <div className="w-full h-full rounded-xl shadow-lg bg-white bg-opacity-60 backdrop-filter backdrop-blur-lg p-4 flex space-x-4">
+      <div className="w-full h-full rounded-xl shadow-lg bg-white bg-opacity-60 backdrop-filter backdrop-blur-lg p-4 flex flex-col sm:flex-row sm:space-x-4">
         {/* Image Container */}
-        <div className="relative w-1/3 h-auto aspect-square flex-shrink-0">
+        <div className="relative w-full sm:w-1/3 h-48 sm:h-auto aspect-square flex-shrink-0">
           <Image
             src={product.images[0]}
             alt={product.name}
@@ -38,7 +38,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
         </div>
 
         {/* Content Container */}
-        <div className="w-2/3 flex flex-col justify-between">
+        <div className="w-full sm:w-2/3 flex flex-col justify-between mt-4 sm:mt-0">
           <div>
             <h3 className="text-lg font-bold" style={{ color: '#003049' }}>
               {product.name}
