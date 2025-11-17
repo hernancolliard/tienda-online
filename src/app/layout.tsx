@@ -11,6 +11,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Tu Tienda Online',
   description: 'Los mejores productos, en un solo lugar.',
+  icons: {
+    icon: '/chipichipi.svg',
+  },
 }
 
 export default function RootLayout({
