@@ -87,7 +87,7 @@ export default function CartPage() {
                 <span>${getCartTotal().toFixed(2)}</span>
               </div>
               <div className="flex justify-between mb-6 text-gray-700">
-                <span>Envío</span>
+                <span>Retira</span>
                 <span>Gratis</span>
               </div>
               <div className="border-t border-gray-300 pt-4">

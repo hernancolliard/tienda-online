@@ -37,11 +37,20 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCartItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === product.id);
       if (existingItem) {
+        if (existingItem.quantity >= product.stock_quantity) {
+          console.warn(`No se pueden añadir más unidades de ${product.name}. Stock máximo alcanzado.`);
+          alert(`No se pueden añadir más unidades de ${product.name}. Stock máximo alcanzado.`);
+          return prevItems;
+        }
         return prevItems.map(item =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prevItems, { ...product, quantity: 1 }];
+      if (product.stock_quantity > 0) {
+        return [...prevItems, { ...product, quantity: 1 }];
+      }
+      console.warn(`${product.name} está agotado.`);
+      return prevItems;
     });
   };
 
@@ -50,15 +59,24 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateQuantity = (productId: number, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(productId);
-    } else {
-      setCartItems(prevItems =>
-        prevItems.map(item =>
-          item.id === productId ? { ...item, quantity } : item
-        )
+    setCartItems(prevItems => {
+      const itemToUpdate = prevItems.find(item => item.id === productId);
+      if (!itemToUpdate) return prevItems;
+
+      if (quantity <= 0) {
+        return prevItems.filter(item => item.id !== productId);
+      }
+      
+      if (quantity > itemToUpdate.stock_quantity) {
+        alert(`No puedes seleccionar más de ${itemToUpdate.stock_quantity} unidades de este producto.`);
+      }
+
+      const newQuantity = Math.min(quantity, itemToUpdate.stock_quantity);
+
+      return prevItems.map(item =>
+        item.id === productId ? { ...item, quantity: newQuantity } : item
       );
-    }
+    });
   };
 
   const clearCart = () => {
