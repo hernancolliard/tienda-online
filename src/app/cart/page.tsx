@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,6 +8,32 @@ import { TrashIcon } from '@heroicons/react/24/outline';
 
 export default function CartPage() {
   const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const [loading, setLoading] = useState(false);
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cartItems),
+      });
+
+      if (!res.ok) {
+        throw new Error('Error al crear la preferencia de pago.');
+      }
+
+      const data = await res.json();
+      window.location.href = data.init_point;
+    } catch (error) {
+      console.error(error);
+      alert('Hubo un error al procesar el pago. Por favor, intenta de nuevo.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-12 min-h-screen">
@@ -69,8 +96,12 @@ export default function CartPage() {
                   <span>${getCartTotal().toFixed(2)}</span>
                 </div>
               </div>
-              <button className="w-full mt-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors">
-                Pagar con Mercado Pago
+              <button 
+                onClick={handleCheckout}
+                disabled={loading}
+                className="w-full mt-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400"
+              >
+                {loading ? 'Procesando...' : 'Pagar con Mercado Pago'}
               </button>
               <Link href="/" className="mt-4 inline-block text-center w-full text-blue-600 hover:underline">
                 o seguir comprando
