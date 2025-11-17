@@ -22,8 +22,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <Header />
           <Sidebar />
+          <Header />
           <div className="main-content transition-all duration-300 pt-20">
             <main className="flex-grow min-h-screen p-8">
               {children}

@@ -10,7 +10,7 @@ export default function Header() {
   const itemCount = getCartItemCount();
 
   return (
-    <header className="bg-gray-800 text-white shadow-md fixed top-0 left-0 right-0 z-30">
+    <header className="bg-gray-800 text-white shadow-md fixed top-0 left-0 right-0 z-30 header-layout">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Left: Logo */}
         <div className="flex-shrink-0">
@@ -22,7 +22,6 @@ export default function Header() {
               height={50}
               className="rounded-full"
             />
-            <span className="ml-3 text-xl font-semibold">Chipichipi</span>
           </Link>
         </div>
 

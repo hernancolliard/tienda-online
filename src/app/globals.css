@@ -27,6 +27,12 @@
 /* Custom styles for main content to account for sidebar */
 .main-content {
   margin-left: 0; /* Default for mobile */
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.header-layout {
+  padding-left: 0; /* Default for mobile */
+  transition: padding-left 0.3s ease-in-out;
 }
 
 @media (min-width: 768px) { /* md breakpoint */
@@ -34,8 +40,16 @@
     margin-left: 5rem; /* Corresponds to w-20 of the sidebar */
   }
 
-  /* Adjust margin when sidebar expands on hover */
-  aside:hover + .main-content {
+  .header-layout {
+    padding-left: 5rem; /* Match sidebar width */
+  }
+
+  /* Adjust margin and padding when sidebar expands on hover */
+  aside:hover ~ .header-layout {
+    padding-left: 16rem; /* Corresponds to w-64 of the sidebar */
+  }
+
+  aside:hover ~ .main-content {
     margin-left: 16rem; /* Corresponds to w-64 of the sidebar */
   }
 }
