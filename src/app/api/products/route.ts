@@ -8,6 +8,10 @@ export async function GET(req: NextRequest) {
     const { searchParams } = req.nextUrl;
     const featuredOnly = searchParams.get('featured') === 'true';
     const categoryId = searchParams.get('category_id');
+    const searchQuery = searchParams.get('query');
+    const minPrice = searchParams.get('minPrice');
+    const maxPrice = searchParams.get('maxPrice');
+    const size = searchParams.get('size');
 
     let query = `
       SELECT p.*, c.name as category_name
@@ -16,14 +20,35 @@ export async function GET(req: NextRequest) {
     `;
     const queryParams = [];
     const conditions = [];
+    let paramIndex = 1;
 
     if (featuredOnly) {
       conditions.push('p.is_featured = true');
     }
 
     if (categoryId) {
-      conditions.push('p.category_id = $1');
+      conditions.push(`p.category_id = $${paramIndex++}`);
       queryParams.push(categoryId);
+    }
+
+    if (searchQuery) {
+      conditions.push(`(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex++})`);
+      queryParams.push(`%${searchQuery}%`);
+    }
+
+    if (minPrice) {
+      conditions.push(`p.price >= $${paramIndex++}`);
+      queryParams.push(parseFloat(minPrice));
+    }
+
+    if (maxPrice) {
+      conditions.push(`p.price <= $${paramIndex++}`);
+      queryParams.push(parseFloat(maxPrice));
+    }
+
+    if (size) {
+      conditions.push(`$${paramIndex++} = ANY(p.sizes)`);
+      queryParams.push(size);
     }
 
     if (conditions.length > 0) {
@@ -73,7 +98,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    console.log('Received request body:', JSON.stringify(body, null, 2)); // Log para depuración
+    console.log('Received request body:', JSON.stringify(body, null, 2));
 
     const {
       name,
@@ -85,7 +110,7 @@ export async function POST(req: NextRequest) {
       sizes,
     } = body;
 
-    console.log('Parsed images from body:', images); // Log para depuración
+    console.log('Parsed images from body:', images);
 
     // Validación simple
     if (!name || !price || !category_id) {

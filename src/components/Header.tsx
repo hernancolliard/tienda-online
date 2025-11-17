@@ -7,11 +7,22 @@ import { useCart } from '@/context/CartContext';
 import { useState } from 'react';
 import { FiMenu, FiX } from 'react-icons/fi';
 import Sidebar from '@/components/Sidebar';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
   const { getCartItemCount } = useCart();
   const itemCount = getCartItemCount();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      router.push(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
+      setSearchTerm('');
+    }
+  };
 
   return (
     <>
@@ -40,19 +51,21 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Center: Search Bar */}
-          <div className="flex-grow max-w-xl mx-4 hidden md:block">
+          {/* Search Bar (visible on all screens, adjusted for mobile) */}
+          <form onSubmit={handleSearch} className="flex-grow max-w-xl mx-4">
             <div className="relative">
               <input
                 type="search"
                 placeholder="Buscar productos..."
                 className="w-full p-2 pl-10 text-sm text-gray-900 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <button type="submit" className="absolute inset-y-0 left-0 flex items-center pl-3">
                 <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
-              </div>
+              </button>
             </div>
-          </div>
+          </form>
 
           {/* Right: Cart */}
           <div className="flex-shrink-0">
