@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Product {
   id: number;
@@ -19,6 +20,7 @@ export default function FeaturedManager() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const fetchProducts = async () => {
     try {
@@ -41,6 +43,11 @@ export default function FeaturedManager() {
   const handleToggleFeatured = async (product: Product) => {
     const updatedProduct = { ...product, is_featured: !product.is_featured };
 
+    // Optimistically update the UI
+    setProducts(prevProducts => 
+      prevProducts.map(p => p.id === product.id ? updatedProduct : p)
+    );
+
     try {
       const res = await fetch(`/api/products/${product.id}`, {
         method: 'PUT',
@@ -50,17 +57,18 @@ export default function FeaturedManager() {
 
       if (!res.ok) {
         const errorData = await res.json();
+        // Revert the optimistic update on failure
+        setProducts(prevProducts => 
+          prevProducts.map(p => p.id === product.id ? product : p)
+        );
         throw new Error(errorData.message || 'No se pudo actualizar el producto.');
       }
       
-      // Actualizar el estado local para reflejar el cambio inmediatamente
-      setProducts(prevProducts => 
-        prevProducts.map(p => p.id === product.id ? updatedProduct : p)
-      );
+      // On success, refresh server-side props for other pages (like homepage)
+      router.refresh();
 
     } catch (err: any) {
       setError(err.message);
-      // Opcional: revertir el cambio en la UI si la API falla
     }
   };
 
