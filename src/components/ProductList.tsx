@@ -143,12 +143,26 @@ export default function ProductList({ products }: ProductListProps) {
                             <span className="text-3xl font-extrabold" style={{ color: '#F77F00' }}>
                               ${selectedProduct.price.toFixed(2)}
                             </span>
+                            <div className="mt-4 flex justify-end gap-4">
+                                <button 
+                                    className="px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700"
+                                    onClick={() => console.log('Add to cart:', selectedProduct.name)}
+                                >
+                                    Agregar al Carrito
+                                </button>
+                                <button 
+                                    className="px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                                    onClick={() => console.log('Buy now:', selectedProduct.name)}
+                                >
+                                    Comprar Ahora
+                                </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </>
-                  )}
-                </Dialog.Panel>
+                      <div className="mt-4">
+                        <p className="text-sm text-gray-500">{selectedProduct.description}</p>
+                      </div>
               </Transition.Child>
             </div>
           </div>

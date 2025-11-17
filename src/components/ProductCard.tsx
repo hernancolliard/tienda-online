@@ -49,6 +49,26 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
               ${product.price.toFixed(2)}
             </span>
           </div>
+          <div className="mt-2 flex justify-end gap-2">
+            <button 
+                className="px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    console.log('Add to cart:', product.name);
+                }}
+            >
+                Agregar al Carrito
+            </button>
+            <button 
+                className="px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    console.log('Buy now:', product.name);
+                }}
+            >
+                Comprar
+            </button>
+          </div>
         </div>
       </div>
     </button>
