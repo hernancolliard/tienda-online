@@ -33,7 +33,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
             src={product.images[0]}
             alt={product.name}
             fill
-            className="object-contain"
+            className="object-contain rounded-xl"
           />
         </div>
 
