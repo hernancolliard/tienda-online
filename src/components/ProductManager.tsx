@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, FormEvent, useRef } from 'react';
+import { useState, useEffect, FormEvent, useRef, DragEvent } from 'react';
 
 // Extiende la interfaz para incluir todos los campos del formulario
 interface Product {
@@ -43,6 +43,7 @@ export default function ProductManager() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -72,29 +73,60 @@ export default function ProductManager() {
     setFormState(prevState => ({ ...prevState, [name]: value }));
   };
 
+  const processFiles = (files: FileList) => {
+    const fileArray = Array.from(files);
+    const newImagePreviews: string[] = [];
+    const newBase64Images: string[] = [];
+
+    fileArray.forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (reader.result && typeof reader.result === 'string') {
+          newImagePreviews.push(reader.result);
+          newBase64Images.push(reader.result); // Store base64 string
+          if (newImagePreviews.length === fileArray.length) {
+            setImagePreviews(prev => [...prev, ...newImagePreviews]);
+            setFormState(prevState => ({
+              ...prevState,
+              images: [...prevState.images, ...newBase64Images],
+            }));
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const files = Array.from(e.target.files);
-      const newImagePreviews: string[] = [];
-      const newBase64Images: string[] = [];
+      processFiles(e.target.files);
+    }
+  };
 
-      files.forEach(file => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          if (reader.result && typeof reader.result === 'string') {
-            newImagePreviews.push(reader.result);
-            newBase64Images.push(reader.result); // Store base64 string
-            if (newImagePreviews.length === files.length) {
-              setImagePreviews(prev => [...prev, ...newImagePreviews]);
-              setFormState(prevState => ({
-                ...prevState,
-                images: [...prevState.images, ...newBase64Images],
-              }));
-            }
-          }
-        };
-        reader.readAsDataURL(file);
-      });
+  const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation(); // Necessary to allow dropping
+  };
+
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      processFiles(files);
     }
   };
 
@@ -258,7 +290,7 @@ export default function ProductManager() {
                 <input id="sizes" name="sizes" type="text" value={formState.sizes} onChange={handleInputChange} className="w-full p-2 border rounded-md" />
               </div>
               <div>
-                <label htmlFor="images" className="block text-sm font-medium mb-1">Imágenes</label>
+                <label className="block text-sm font-medium mb-1">Imágenes</label>
                 <input
                   id="images"
                   name="images"
@@ -269,14 +301,18 @@ export default function ProductManager() {
                   onChange={handleFileChange}
                   className="hidden" // Hide the default file input
                 />
-                <button
-                  type="button"
+                <div
+                  onDragEnter={handleDragEnter}
+                  onDragLeave={handleDragLeave}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full p-2 border rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700"
+                  className={`w-full p-6 border-2 border-dashed rounded-md cursor-pointer text-center transition-colors
+                    ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50 hover:bg-gray-100'}`}
                 >
-                  Seleccionar Imágenes
-                </button>
-                <div className="mt-2 flex flex-wrap gap-2">
+                  <p className="text-gray-500">Arrastra y suelta imágenes aquí, o haz clic para seleccionar</p>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
                   {imagePreviews.map((src, index) => (
                     <img key={index} src={src} alt={`Preview ${index}`} className="w-24 h-24 object-cover rounded-md" />
                   ))}
