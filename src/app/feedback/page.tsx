@@ -8,7 +8,7 @@ import { CheckCircleIcon, XCircleIcon, ExclamationCircleIcon } from '@heroicons/
 
 function FeedbackContent() {
   const searchParams = useSearchParams();
-  const status = search-params.get('status');
+  const status = searchParams.get('status');
   const { clearCart } = useCart();
 
   useEffect(() => {
