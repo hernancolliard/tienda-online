@@ -60,7 +60,7 @@ export default function ProductList({ products }: ProductListProps) {
       </div>
 
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-[1000]" onClose={closeModal}> {/* Aumentar z-index */}
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -73,8 +73,8 @@ export default function ProductList({ products }: ProductListProps) {
             <div className="fixed inset-0 bg-black bg-opacity-50" />
           </Transition.Child>
 
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <div className="fixed top-16 inset-x-0 bottom-0 overflow-y-auto"> {/* Ajustar posicionamiento */}
+            <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center p-4 text-center"> {/* Ajustar min-height */}
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
