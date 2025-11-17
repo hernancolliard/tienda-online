@@ -330,12 +330,12 @@ export default function ProductManager() {
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {imagePreviews.map((src, index) => (
-                    <div key={index} className="relative">
+                    <div key={src} className="relative">
                       <img src={src} alt={`Preview ${index}`} className="w-24 h-24 object-cover rounded-md" />
                       <button
                         type="button"
                         onClick={() => handleDeleteImage(index)}
-                        className="absolute top-0 right-0 transform -translate-y-1/2 translate-x-1/2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold"
+                        className="absolute top-1 right-1 bg-red-600 bg-opacity-75 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold hover:bg-opacity-100"
                         aria-label="Eliminar imagen"
                       >
                         X
