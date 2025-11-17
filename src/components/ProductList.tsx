@@ -100,7 +100,7 @@ export default function ProductList({ products }: ProductListProps) {
                             src={selectedProduct.images[currentImageIndex]}
                             alt={selectedProduct.name}
                             fill
-                            className="object-cover rounded-lg"
+                            className="object-contain rounded-lg"
                           />
                           {selectedProduct.images.length > 1 && (
                             <>
@@ -139,6 +139,7 @@ export default function ProductList({ products }: ProductListProps) {
                           </Dialog.Title>
                           <div className="mt-4 flex-grow">
                             <p className="text-sm text-gray-600">{selectedProduct.description}</p>
+                            <p className="text-sm text-gray-600 mt-2">Stock disponible: {selectedProduct.stock_quantity}</p>
                             {selectedProduct.sizes && selectedProduct.sizes.length > 0 && (
                               <div className="mt-4">
                                 <h4 className="text-sm font-semibold" style={{ color: '#D62828' }}>Talles disponibles:</h4>
