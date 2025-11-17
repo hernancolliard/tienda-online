@@ -28,12 +28,12 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
     >
       <div className="w-full h-full rounded-xl shadow-lg bg-white bg-opacity-60 backdrop-filter backdrop-blur-lg p-4 flex flex-col sm:flex-row sm:space-x-4">
         {/* Image Container */}
-        <div className="relative w-full sm:w-1/3 h-48 sm:h-auto aspect-square flex-shrink-0">
+        <div className="relative w-full sm:w-1/3 h-48 sm:h-auto aspect-square flex-shrink-0 rounded-xl overflow-hidden">
           <Image
             src={product.images[0]}
             alt={product.name}
             fill
-            className="object-contain rounded-xl"
+            className="object-contain"
           />
         </div>
 
