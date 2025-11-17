@@ -217,7 +217,7 @@ export default function ProductManager() {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md mt-8">
+    <div className="p-6 bg-white rounded-lg shadow-md mt-8 text-gray-900">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Gestionar Productos</h2>
         <button onClick={openModalForAdd} className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
@@ -259,7 +259,7 @@ export default function ProductManager() {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+          <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto text-gray-900">
             <h3 className="text-2xl font-bold mb-6">{editingProduct ? 'Editar Producto' : 'Añadir Nuevo Producto'}</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>

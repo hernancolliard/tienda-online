@@ -3,10 +3,10 @@ import React from 'react';
 const PrivacyPolicyPage = () => {
   return (
     <div className="container mx-auto px-4 py-12 min-h-screen">
-      <h1 className="text-4xl font-bold mb-6" style={{ color: '#003049' }}>
+      <h1 className="text-4xl font-bold mb-6 text-white">
         Política de Privacidad
       </h1>
-      <div className="space-y-4 text-gray-700">
+      <div className="space-y-4 text-white">
         <p>
           En Tu Tienda Online, accesible desde tu-tienda.com, una de nuestras principales prioridades es la privacidad de nuestros visitantes. Este documento de Política de Privacidad contiene tipos de información que se recopilan y registran y cómo la usamos.
         </p>

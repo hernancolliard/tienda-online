@@ -104,7 +104,7 @@ export default function CategoryManager() {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md mt-6">
+    <div className="p-6 bg-white rounded-lg shadow-md mt-6 text-gray-900">
       <h2 className="text-xl font-semibold mb-4">Gestionar Categorías</h2>
       
       {error && <p className="text-red-500 mb-4">{error}</p>}
