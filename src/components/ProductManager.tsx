@@ -335,7 +335,7 @@ export default function ProductManager() {
                       <button
                         type="button"
                         onClick={() => handleDeleteImage(index)}
-                        className="absolute top-1 right-1 bg-red-600 bg-opacity-75 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold hover:bg-opacity-100"
+                        className="absolute top-1 right-1 bg-white text-red-600 border border-red-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold hover:bg-red-100"
                         aria-label="Eliminar imagen"
                       >
                         X
