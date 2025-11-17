@@ -87,7 +87,7 @@ export default function Sidebar() {
               const isActive = pathname === link.href;
               return (
                 <li key={link.name} className="w-full">
-                  <Link href={link.href} className={`flex items-center md:justify-center group-hover:justify-start w-full h-16 my-2 transition-colors duration-200 relative group-hover:px-6 ${isActive ? 'bg-[#F77F00] text-white' : 'hover:bg-[#004a70]'}`} onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href={link.href} className={`flex items-center group-hover:justify-start w-full h-16 my-2 transition-colors duration-200 relative md:pl-6 group-hover:px-6 ${isActive ? 'bg-[#F77F00] text-white' : 'hover:bg-[#004a70]'}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <link.icon className="w-8 h-8 flex-shrink-0" />
                     <span className={`ml-4 text-lg font-medium whitespace-nowrap transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'} md:group-hover:opacity-100`}>
                       {link.name}
@@ -111,7 +111,7 @@ export default function Sidebar() {
                   {user?.name || user?.email}
                 </p>
               </div>
-              <button onClick={() => { signOut({ callbackUrl: '/' }); setIsMobileMenuOpen(false); }} className="flex items-center md:justify-center group-hover:justify-start w-full h-16 transition-colors duration-200 hover:bg-red-800 rounded-md">
+              <button onClick={() => { signOut({ callbackUrl: '/' }); setIsMobileMenuOpen(false); }} className="flex items-center group-hover:justify-start w-full h-16 transition-colors duration-200 hover:bg-red-800 rounded-md md:pl-6">
                 <FiLogOut className="w-8 h-8 flex-shrink-0" />
                 <span className={`ml-4 text-lg font-medium whitespace-nowrap transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'} md:group-hover:opacity-100`}>
                   Salir
@@ -119,7 +119,7 @@ export default function Sidebar() {
               </button>
             </div>
           ) : (
-            <Link href="/login" className="flex items-center md:justify-center group-hover:justify-start w-full h-16 transition-colors duration-200 hover:bg-[#004a70] rounded-md group-hover:px-6" onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/login" className="flex items-center group-hover:justify-start w-full h-16 transition-colors duration-200 hover:bg-[#004a70] rounded-md group-hover:px-6 md:pl-6" onClick={() => setIsMobileMenuOpen(false)}>
               <FiLogIn className="w-8 h-8 flex-shrink-0" />
               <span className={`ml-4 text-lg font-medium whitespace-nowrap transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'} md:group-hover:opacity-100`}>
                 Entrar
