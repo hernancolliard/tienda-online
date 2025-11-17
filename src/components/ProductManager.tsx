@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, FormEvent, useRef } from 'react';
 
 // Extiende la interfaz para incluir todos los campos del formulario
 interface Product {
@@ -25,7 +25,7 @@ const initialFormState = {
   name: '',
   description: '',
   price: '',
-  images: '', // Comma-separated URLs
+  images: [] as string[], // Now an array of base64 strings
   category_id: '',
   stock_quantity: '0',
   sizes: '', // Comma-separated sizes
@@ -41,6 +41,8 @@ export default function ProductManager() {
   // State para el formulario y para saber si estamos editando
   const [formState, setFormState] = useState(initialFormState);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const fetchData = async () => {
     try {
@@ -70,6 +72,32 @@ export default function ProductManager() {
     setFormState(prevState => ({ ...prevState, [name]: value }));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      const newImagePreviews: string[] = [];
+      const newBase64Images: string[] = [];
+
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (reader.result && typeof reader.result === 'string') {
+            newImagePreviews.push(reader.result);
+            newBase64Images.push(reader.result); // Store base64 string
+            if (newImagePreviews.length === files.length) {
+              setImagePreviews(prev => [...prev, ...newImagePreviews]);
+              setFormState(prevState => ({
+                ...prevState,
+                images: [...prevState.images, ...newBase64Images],
+              }));
+            }
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -79,7 +107,7 @@ export default function ProductManager() {
       price: parseFloat(formState.price),
       stock_quantity: parseInt(formState.stock_quantity, 10),
       category_id: parseInt(formState.category_id, 10),
-      images: formState.images.split(',').map(url => url.trim()).filter(url => url),
+      images: formState.images, // Already an array of base64 strings
       sizes: formState.sizes.split(',').map(s => s.trim()).filter(s => s),
       is_featured: editingProduct ? editingProduct.is_featured : false,
     };
@@ -117,11 +145,12 @@ export default function ProductManager() {
       name: product.name,
       description: product.description || '',
       price: String(product.price),
-      images: (product.images || []).join(', '),
+      images: product.images || [], // Ensure it's an array
       category_id: String(product.category_id),
       stock_quantity: String(product.stock_quantity),
       sizes: (product.sizes || []).join(', '),
     });
+    setImagePreviews(product.images || []); // Set image previews for editing
     setIsModalOpen(true);
   };
 
@@ -129,6 +158,7 @@ export default function ProductManager() {
     setError(null);
     setEditingProduct(null);
     setFormState(initialFormState);
+    setImagePreviews([]); // Clear previews for new product
     setIsModalOpen(true);
   };
 
@@ -136,6 +166,7 @@ export default function ProductManager() {
     setIsModalOpen(false);
     setEditingProduct(null);
     setFormState(initialFormState);
+    setImagePreviews([]); // Clear previews on close
   };
 
   const handleDelete = async (id: number) => {
@@ -227,8 +258,29 @@ export default function ProductManager() {
                 <input id="sizes" name="sizes" type="text" value={formState.sizes} onChange={handleInputChange} className="w-full p-2 border rounded-md" />
               </div>
               <div>
-                <label htmlFor="images" className="block text-sm font-medium mb-1">URLs de Imágenes (separadas por coma)</label>
-                <textarea id="images" name="images" value={formState.images} onChange={handleInputChange} className="w-full p-2 border rounded-md" placeholder="https://ejemplo.com/img1.jpg, https://ejemplo.com/img2.jpg" />
+                <label htmlFor="images" className="block text-sm font-medium mb-1">Imágenes</label>
+                <input
+                  id="images"
+                  name="images"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  className="hidden" // Hide the default file input
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full p-2 border rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700"
+                >
+                  Seleccionar Imágenes
+                </button>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {imagePreviews.map((src, index) => (
+                    <img key={index} src={src} alt={`Preview ${index}`} className="w-24 h-24 object-cover rounded-md" />
+                  ))}
+                </div>
               </div>
               <div className="flex justify-end gap-4 pt-4">
                 <button type="button" onClick={closeModal} className="px-4 py-2 bg-gray-300 rounded-md">Cancelar</button>
