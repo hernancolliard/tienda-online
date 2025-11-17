@@ -5,6 +5,7 @@ import { Product } from '@/types/product';
 import ProductCard from './ProductCard';
 import { Dialog, Transition } from '@headlessui/react';
 import Image from 'next/image';
+import { useCart } from '@/context/CartContext';
 import { XMarkIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 interface ProductListProps {
@@ -15,16 +16,28 @@ export default function ProductList({ products }: ProductListProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { addToCart } = useCart();
+  const [isAdded, setIsAdded] = useState(false);
 
   function closeModal() {
     setIsOpen(false);
+    setIsAdded(false); // Reset on close
   }
 
   function openModal(product: Product) {
     setSelectedProduct(product);
     setCurrentImageIndex(0); // Reset index when opening
     setIsOpen(true);
+    setIsAdded(false); // Reset on open
   }
+
+  const handleAddToCart = (product: Product) => {
+    addToCart(product);
+    setIsAdded(true);
+    setTimeout(() => {
+      setIsAdded(false);
+    }, 2000); // Reset after 2 seconds
+  };
 
   const handleNextImage = () => {
     if (selectedProduct) {
@@ -145,14 +158,15 @@ export default function ProductList({ products }: ProductListProps) {
                             </span>
                             <div className="mt-4 flex justify-end gap-4">
                                 <button 
-                                    className="px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700"
-                                    onClick={() => console.log('Add to cart:', selectedProduct.name)}
+                                    className={`px-6 py-2 border border-transparent text-base font-medium rounded-md text-white ${isAdded ? 'bg-green-600' : 'bg-gray-600 hover:bg-gray-700'}`}
+                                    onClick={() => selectedProduct && handleAddToCart(selectedProduct)}
+                                    disabled={isAdded}
                                 >
-                                    Agregar al Carrito
+                                    {isAdded ? '¡Añadido!' : 'Agregar al Carrito'}
                                 </button>
                                 <button 
                                     className="px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-                                    onClick={() => console.log('Buy now:', selectedProduct.name)}
+                                    onClick={() => console.log('Buy now:', selectedProduct?.name)}
                                 >
                                     Comprar Ahora
                                 </button>
@@ -160,9 +174,9 @@ export default function ProductList({ products }: ProductListProps) {
                           </div>
                         </div>
                       </div>
-                      <div className="mt-4">
-                        <p className="text-sm text-gray-500">{selectedProduct.description}</p>
-                      </div>
+                    </>
+                  )}
+                </Dialog.Panel>
               </Transition.Child>
             </div>
           </div>

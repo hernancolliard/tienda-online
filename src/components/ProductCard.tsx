@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import { Product } from '@/types/product';
+import { useCart } from '@/context/CartContext';
+import { useState } from 'react';
 
 interface ProductCardProps {
   product: Product;
@@ -7,6 +9,18 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, onClick }: ProductCardProps) {
+  const { addToCart } = useCart();
+  const [isAdded, setIsAdded] = useState(false);
+
+  const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    addToCart(product);
+    setIsAdded(true);
+    setTimeout(() => {
+      setIsAdded(false);
+    }, 2000);
+  };
+
   return (
     <button
       onClick={onClick}
@@ -51,13 +65,11 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
           </div>
           <div className="mt-2 flex justify-end gap-2">
             <button 
-                className="px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    console.log('Add to cart:', product.name);
-                }}
+                className={`px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white ${isAdded ? 'bg-green-600' : 'bg-gray-600 hover:bg-gray-700'}`}
+                onClick={handleAddToCart}
+                disabled={isAdded}
             >
-                Agregar al Carrito
+                {isAdded ? '¡Añadido!' : 'Agregar al Carrito'}
             </button>
             <button 
                 className="px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
