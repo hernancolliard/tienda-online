@@ -70,7 +70,7 @@ export default function CartPage() {
                   <p className="font-bold text-primary-text w-24 text-right">
                     ${(item.price * item.quantity).toFixed(2)}
                   </p>
-                  <button onClick={() => removeFromCart(item.id)} className="text-gray-900 hover:text-black">
+                  <button onClick={() => removeFromCart(item.id)} className="text-black hover:text-gray-700">
                     <TrashIcon className="h-6 w-6" />
                   </button>
                 </div>
