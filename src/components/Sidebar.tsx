@@ -78,13 +78,13 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Sideb
               const isActive = pathname === link.href;
               return (
                 <li key={link.name} className="w-full">
-                  <Link href={link.href} className={`flex items-center group-hover:justify-start w-full h-16 my-2 transition-colors duration-200 relative md:pl-6 group-hover:px-6 ${isActive ? 'bg-orange text-white' : 'hover:bg-black/10'}`} onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href={link.href} className={`flex items-center group-hover:justify-start w-full h-16 my-2 transition-colors duration-200 relative md:pl-6 group-hover:px-6 ${isActive ? 'bg-primary-text text-white' : 'hover:bg-black/10'}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <link.icon className="w-8 h-8 flex-shrink-0" />
                     <span className={`ml-4 text-lg font-medium whitespace-nowrap transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'} md:group-hover:opacity-100`}>
                       {link.name}
                     </span>
                     {isActive && (
-                       <div className="absolute left-0 top-0 h-full w-1 bg-orange"></div>
+                       <div className="absolute left-0 top-0 h-full w-1 bg-primary-text"></div>
                     )}
                   </Link>
                 </li>

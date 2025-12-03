@@ -87,7 +87,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
           </div>
 
           <div className="text-right mt-4">
-            <span className="text-2xl font-extrabold text-orange">
+            <span className="text-2xl font-extrabold text-primary-text">
               ${product.price.toFixed(2)}
             </span>
           </div>
@@ -100,7 +100,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
                 {isAdded ? '¡Añadido!' : 'Agregar al Carrito'}
             </button>
             <button 
-                className="px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-orange hover:opacity-90"
+                className="px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-primary-text hover:opacity-90"
                 onClick={handleBuyNow}
             >
                 Comprar

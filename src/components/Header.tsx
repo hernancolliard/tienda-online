@@ -32,7 +32,7 @@ export default function Header() {
           <div className="md:hidden flex-shrink-0">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-background bg-primary-text rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange"
+              className="p-2 text-background bg-primary-text rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-text"
             >
               {isMobileMenuOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
             </button>
@@ -57,7 +57,7 @@ export default function Header() {
               <input
                 type="search"
                 placeholder="Buscar productos..."
-                className="w-full p-2 pl-10 text-sm text-primary-text rounded-lg bg-background focus:ring-orange focus:border-orange"
+                className="w-full p-2 pl-10 text-sm text-primary-text rounded-lg bg-background focus:ring-primary-text focus:border-primary-text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />

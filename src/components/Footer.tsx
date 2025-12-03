@@ -24,7 +24,7 @@ const Footer = () => {
 
           <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0">
             {pageLinks.map((link, index) => (
-              <Link key={index} href={link.href} className="hover:text-orange transition-colors duration-300 px-4 py-2">
+              <Link key={index} href={link.href} className="hover:text-mango transition-colors duration-300 px-4 py-2">
                 {link.text}
               </Link>
             ))}
@@ -37,7 +37,7 @@ const Footer = () => {
                 href={link.href} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:text-orange transition-colors duration-300"
+                className="hover:text-mango transition-colors duration-300"
                 aria-label={link.href}
               >
                 <link.icon size={24} />
