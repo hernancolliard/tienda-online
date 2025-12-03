@@ -84,12 +84,12 @@ export default function ProductList({ products }: ProductListProps) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-component-bg p-6 text-left align-middle shadow-xl transition-all">
                   {selectedProduct && (
                     <>
                       <button
                         type="button"
-                        className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 z-20"
+                        className="absolute top-3 right-3 text-primary-text/70 hover:text-primary-text z-20"
                         onClick={closeModal}
                       >
                         <XMarkIcon className="h-6 w-6" />
@@ -132,20 +132,19 @@ export default function ProductList({ products }: ProductListProps) {
                         <div className="flex flex-col">
                           <Dialog.Title
                             as="h3"
-                            className="text-2xl font-bold leading-6"
-                            style={{ color: '#003049' }}
+                            className="text-2xl font-bold leading-6 text-primary-text"
                           >
                             {selectedProduct.name}
                           </Dialog.Title>
                           <div className="mt-4 flex-grow">
-                            <p className="text-sm text-gray-600">{selectedProduct.description}</p>
-                            <p className="text-sm text-gray-600 mt-2">Stock disponible: {selectedProduct.stock_quantity}</p>
+                            <p className="text-sm text-primary-text/90">{selectedProduct.description}</p>
+                            <p className="text-sm text-primary-text/90 mt-2">Stock disponible: {selectedProduct.stock_quantity}</p>
                             {selectedProduct.sizes && selectedProduct.sizes.length > 0 && (
                               <div className="mt-4">
-                                <h4 className="text-sm font-semibold" style={{ color: '#D62828' }}>Talles disponibles:</h4>
+                                <h4 className="text-sm font-semibold text-red">Talles disponibles:</h4>
                                 <div className="flex flex-wrap gap-2 mt-2">
                                   {selectedProduct.sizes.map(t => (
-                                    <span key={t} className="text-xs font-medium px-3 py-1 rounded-full" style={{ backgroundColor: '#EAE2B7', color: '#003049' }}>
+                                    <span key={t} className="text-xs font-medium px-3 py-1 rounded-full bg-background text-primary-text">
                                       {t}
                                     </span>
                                   ))}
@@ -154,35 +153,20 @@ export default function ProductList({ products }: ProductListProps) {
                             )}
                           </div>
                           <div className="mt-6 text-right">
-                            <span className="text-3xl font-extrabold" style={{ color: '#F77F00' }}>
+                            <span className="text-3xl font-extrabold text-primary-text">
                               ${selectedProduct.price.toFixed(2)}
                             </span>
                             <div className="mt-4 flex justify-end gap-4">
                                 <button 
-                                    className={`px-6 py-2 border border-transparent text-base font-medium rounded-md text-white ${isAdded ? 'bg-green-600' : 'bg-gray-600 hover:bg-gray-700'}`}
+                                    className={`px-6 py-2 border border-transparent text-base font-medium rounded-md text-white ${isAdded ? 'bg-green-600' : 'bg-primary-text hover:opacity-90'}`}
                                     onClick={() => selectedProduct && handleAddToCart(selectedProduct)}
                                     disabled={isAdded}
                                 >
                                     {isAdded ? '¡Añadido!' : 'Agregar al Carrito'}
                                 </button>
                                 <button 
-                                    className="px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                                    className="px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-orange hover:opacity-90"
                                     onClick={() => console.log('Buy now:', selectedProduct?.name)}
                                 >
                                     Comprar Ahora
                                 </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
-    </>
-  );
-}
