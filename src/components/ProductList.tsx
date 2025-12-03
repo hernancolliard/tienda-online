@@ -52,7 +52,7 @@ export default function ProductList({ products }: ProductListProps) {
   };
 
   return (
-    <>
+    <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {products.slice(0, 6).map((product) => (
           <ProductCard key={product.id} product={product} onClick={() => openModal(product)} />
@@ -60,7 +60,7 @@ export default function ProductList({ products }: ProductListProps) {
       </div>
 
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-[1000]" onClose={closeModal}> {/* Aumentar z-index */}
+        <Dialog as="div" className="relative z-[1000]" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -73,8 +73,8 @@ export default function ProductList({ products }: ProductListProps) {
             <div className="fixed inset-0 bg-black bg-opacity-50" />
           </Transition.Child>
 
-          <div className="fixed top-16 inset-x-0 bottom-0 overflow-y-auto"> {/* Ajustar posicionamiento */}
-            <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center p-4 text-center"> {/* Ajustar min-height */}
+          <div className="fixed top-16 inset-x-0 bottom-0 overflow-y-auto">
+            <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center p-4 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -170,3 +170,18 @@ export default function ProductList({ products }: ProductListProps) {
                                 >
                                     Comprar Ahora
                                 </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+    </div>
+  );
+}
