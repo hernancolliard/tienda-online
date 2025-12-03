@@ -117,7 +117,7 @@ export default function CategoryManager() {
           placeholder="Nombre de la nueva categoría"
           className="flex-grow p-2 border rounded-md bg-background text-primary-text"
         />
-        <button type="submit" className="px-4 py-2 bg-orange text-white rounded-md hover:opacity-90">Añadir</button>
+        <button type="submit" className="px-4 py-2 bg-primary-text text-white rounded-md hover:opacity-90">Añadir</button>
       </form>
 
       {loading ? <p>Cargando...</p> : (
@@ -140,12 +140,12 @@ export default function CategoryManager() {
                   <div className="flex gap-2">
                     {editingCategoryId === category.id ? (
                       <>
-                        <button onClick={() => handleSaveEdit(category.id)} className="text-sm text-primary-text hover:text-orange">Guardar</button>
+                        <button onClick={() => handleSaveEdit(category.id)} className="text-sm text-primary-text hover:opacity-80">Guardar</button>
                         <button onClick={handleCancelEdit} className="text-sm text-primary-text/70 hover:text-primary-text">Cancelar</button>
                       </>
                     ) : (
                       <>
-                        <button onClick={() => handleEdit(category)} className="text-sm text-orange hover:opacity-80">Editar</button>
+                        <button onClick={() => handleEdit(category)} className="text-sm text-primary-text hover:opacity-80">Editar</button>
                         <button onClick={() => handleDelete(category.id)} className="text-sm text-red hover:opacity-80">Eliminar</button>
                       </>
                     )}

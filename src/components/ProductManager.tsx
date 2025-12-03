@@ -254,7 +254,7 @@ export default function ProductManager() {
         <h2 className="text-xl font-semibold">Gestionar Productos</h2>
         <button
           onClick={openModalForAdd}
-          className="px-4 py-2 bg-orange text-white rounded-md hover:opacity-90"
+          className="px-4 py-2 bg-primary-text text-white rounded-md hover:opacity-90"
         >
           Añadir Producto
         </button>
@@ -291,7 +291,7 @@ export default function ProductManager() {
                     <div className="flex justify-center gap-2">
                       <button
                         onClick={() => openModalForEdit(product)}
-                        className="text-sm text-orange hover:opacity-80"
+                        className="text-sm text-primary-text hover:opacity-80"
                       >
                         Editar
                       </button>
@@ -447,7 +447,7 @@ export default function ProductManager() {
                   className={`w-full p-6 border-2 border-dashed rounded-md cursor-pointer text-center transition-colors
                     ${
                       isDragging
-                        ? "border-orange bg-orange/10"
+                        ? "border-primary-text bg-primary-text/10"
                         : "border-primary-text/30 bg-background hover:bg-black/5"
                     }`}
                 >
@@ -488,7 +488,7 @@ export default function ProductManager() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-orange text-white rounded-md hover:opacity-90"
+                  className="px-4 py-2 bg-primary-text text-white rounded-md hover:opacity-90"
                 >
                   {editingProduct ? "Guardar Cambios" : "Guardar Producto"}
                 </button>

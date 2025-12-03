@@ -56,7 +56,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
     >
       <div className="w-full h-full rounded-xl shadow-xl bg-component-bg p-4 flex flex-col sm:flex-row sm:space-x-4">
         {/* Image Container */}
-        <div className="relative w-full sm:w-1/3 h-48 sm:h-auto flex-shrink-0 rounded-xl overflow-hidden bg-background">
+        <div className="relative w-full sm:w-1/3 h-48 sm:h-auto flex-shrink-0 rounded-xl overflow-hidden bg-white">
           <Image
             src={product.images[0]}
             alt={product.name}

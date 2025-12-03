@@ -42,7 +42,7 @@ export default function CartPage() {
       {cartItems.length === 0 ? (
         <div className="text-center bg-component-bg p-8 rounded-lg shadow-xl">
           <p className="text-xl text-primary-text">Tu carrito está vacío.</p>
-          <Link href="/" className="mt-4 inline-block px-6 py-3 bg-orange text-white font-semibold rounded-lg hover:opacity-90">
+          <Link href="/" className="mt-4 inline-block px-6 py-3 bg-primary-text text-white font-semibold rounded-lg hover:opacity-90">
             Seguir comprando
           </Link>
         </div>
@@ -70,7 +70,7 @@ export default function CartPage() {
                   <p className="font-bold text-primary-text w-24 text-right">
                     ${(item.price * item.quantity).toFixed(2)}
                   </p>
-                  <button onClick={() => removeFromCart(item.id)} className="text-black hover:text-gray-700">
+                  <button onClick={() => removeFromCart(item.id)} className="text-red-700 hover:text-red-900">
                     <TrashIcon className="h-6 w-6" />
                   </button>
                 </div>
@@ -99,7 +99,7 @@ export default function CartPage() {
               <button 
                 onClick={handleCheckout}
                 disabled={loading}
-                className="w-full mt-6 py-3 bg-orange text-white font-bold rounded-lg hover:opacity-90 transition-colors disabled:bg-gray-400"
+                className="w-full mt-6 py-3 bg-primary-text text-white font-bold rounded-lg hover:opacity-90 transition-colors disabled:bg-gray-400"
               >
                 {loading ? 'Procesando...' : 'Pagar con Mercado Pago'}
               </button>
