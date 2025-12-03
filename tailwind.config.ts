@@ -10,10 +10,10 @@ const config: Config = {
     extend: {
       colors: {
         'background': '#eae2b7',
-        'component-bg': '#c4b38d',
+        'component-bg': '#d8c8a1',
         'primary-text': '#003049',
-        'mango': '#fcbf49',
-        'orange': '#f77f00',
+        'mango': '#3b82f6', // Changed from #fcbf49
+        'orange': '#3b82f6', // Changed from #f77f00
         'red': '#d62828',
       },
       backgroundImage: {

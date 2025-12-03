@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-background text-primary-text;
+    @apply bg-ivory text-gray-800;
   }
 }
 
