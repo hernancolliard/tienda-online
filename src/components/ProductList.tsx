@@ -141,7 +141,7 @@ export default function ProductList({ products }: ProductListProps) {
                             <p className="text-sm text-primary-text/90 mt-2">Stock disponible: {selectedProduct.stock_quantity}</p>
                             {selectedProduct.sizes && selectedProduct.sizes.length > 0 && (
                               <div className="mt-4">
-                                <h4 className="text-sm font-semibold text-red">Talles disponibles:</h4>
+                                <h4 className="text-sm font-semibold text-primary-text">Talles disponibles:</h4>
                                 <div className="flex flex-wrap gap-2 mt-2">
                                   {selectedProduct.sizes.map(t => (
                                     <span key={t} className="text-xs font-medium px-3 py-1 rounded-full bg-background text-primary-text">
@@ -165,7 +165,7 @@ export default function ProductList({ products }: ProductListProps) {
                                     {isAdded ? '¡Añadido!' : 'Agregar al Carrito'}
                                 </button>
                                 <button 
-                                    className="px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-orange hover:opacity-90"
+                                    className="px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-primary-text hover:opacity-90"
                                     onClick={() => console.log('Buy now:', selectedProduct?.name)}
                                 >
                                     Comprar Ahora
