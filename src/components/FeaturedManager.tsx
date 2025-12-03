@@ -73,13 +73,13 @@ export default function FeaturedManager() {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md mt-8 text-gray-900">
+    <div className="p-6 bg-component-bg rounded-lg shadow-xl mt-8 text-primary-text">
       <h2 className="text-xl font-semibold mb-4">Gestionar Productos Destacados</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {error && <p className="text-red mb-4">{error}</p>}
       {loading ? <p>Cargando...</p> : (
         <div className="space-y-2">
           {products.map(product => (
-            <div key={product.id} className="flex justify-between items-center p-2 rounded-md hover:bg-gray-100">
+            <div key={product.id} className="flex justify-between items-center p-2 rounded-md hover:bg-black/10">
               <span>{product.name}</span>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -88,7 +88,7 @@ export default function FeaturedManager() {
                   onChange={() => handleToggleFeatured(product)}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                <div className="w-11 h-6 bg-background rounded-full peer peer-focus:ring-4 peer-focus:ring-orange/50 peer-checked:after:translate-x-full peer-checked:after:border-background after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-primary-text/50 after:border-primary-text/30 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange"></div>
               </label>
             </div>
           ))}

@@ -26,13 +26,13 @@ export default function Header() {
 
   return (
     <>
-      <header className="bg-gray-800 text-white shadow-md fixed top-0 left-0 right-0 z-50 header-layout">
+      <header className="bg-component-bg text-primary-text shadow-md fixed top-0 left-0 right-0 z-50 header-layout">
         <div className="w-full px-4 py-3 flex justify-between items-center">
           {/* Left: Hamburger menu button for mobile */}
           <div className="md:hidden flex-shrink-0">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-[#EAE2B7] bg-[#003049] rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F77F00]"
+              className="p-2 text-background bg-primary-text rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange"
             >
               {isMobileMenuOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
             </button>
@@ -57,22 +57,22 @@ export default function Header() {
               <input
                 type="search"
                 placeholder="Buscar productos..."
-                className="w-full p-2 pl-10 text-sm text-gray-900 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-2 pl-10 text-sm text-primary-text rounded-lg bg-background focus:ring-orange focus:border-orange"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <button type="submit" className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
+                <MagnifyingGlassIcon className="h-5 w-5 text-primary-text" />
               </button>
             </div>
           </form>
 
           {/* Right: Cart */}
           <div className="flex-shrink-0">
-            <Link href="/cart" className="relative p-2 block rounded-full hover:bg-gray-700">
+            <Link href="/cart" className="relative p-2 block rounded-full hover:bg-black/10">
               <ShoppingCartIcon className="h-7 w-7" />
               {itemCount > 0 && (
-                <span className="absolute top-0 right-0 block h-5 w-5 rounded-full bg-red-600 text-white text-xs flex items-center justify-center">
+                <span className="absolute top-0 right-0 block h-5 w-5 rounded-full bg-red text-white text-xs flex items-center justify-center">
                   {itemCount}
                 </span>
               )}

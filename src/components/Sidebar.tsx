@@ -66,7 +66,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Sideb
       )}
 
       <aside
-        className={`group fixed top-0 left-0 h-screen bg-[#003049] text-[#EAE2B7] shadow-xl transition-all duration-300 ease-in-out z-[999] flex flex-col
+        className={`group fixed top-0 left-0 h-screen bg-component-bg text-primary-text shadow-xl transition-all duration-300 ease-in-out z-[999] flex flex-col
           ${isMobileMenuOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64'}
           md:translate-x-0 md:w-20 md:hover:w-64`}
       >
@@ -78,13 +78,13 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Sideb
               const isActive = pathname === link.href;
               return (
                 <li key={link.name} className="w-full">
-                  <Link href={link.href} className={`flex items-center group-hover:justify-start w-full h-16 my-2 transition-colors duration-200 relative md:pl-6 group-hover:px-6 ${isActive ? 'bg-[#F77F00] text-white' : 'hover:bg-[#004a70]'}`} onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href={link.href} className={`flex items-center group-hover:justify-start w-full h-16 my-2 transition-colors duration-200 relative md:pl-6 group-hover:px-6 ${isActive ? 'bg-orange text-white' : 'hover:bg-black/10'}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <link.icon className="w-8 h-8 flex-shrink-0" />
                     <span className={`ml-4 text-lg font-medium whitespace-nowrap transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'} md:group-hover:opacity-100`}>
                       {link.name}
                     </span>
                     {isActive && (
-                       <div className="absolute left-0 top-0 h-full w-1 bg-white"></div>
+                       <div className="absolute left-0 top-0 h-full w-1 bg-orange"></div>
                     )}
                   </Link>
                 </li>
@@ -102,7 +102,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Sideb
                   {user?.name || user?.email}
                 </p>
               </div>
-              <button onClick={() => { signOut({ callbackUrl: '/' }); setIsMobileMenuOpen(false); }} className="flex items-center group-hover:justify-start w-full h-16 transition-colors duration-200 hover:bg-red-800 rounded-md md:pl-6">
+              <button onClick={() => { signOut({ callbackUrl: '/' }); setIsMobileMenuOpen(false); }} className="flex items-center group-hover:justify-start w-full h-16 transition-colors duration-200 hover:bg-red rounded-md md:pl-6">
                 <FiLogOut className="w-8 h-8 flex-shrink-0" />
                 <span className={`ml-4 text-lg font-medium whitespace-nowrap transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'} md:group-hover:opacity-100`}>
                   Salir
@@ -110,7 +110,7 @@ export default function Sidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Sideb
               </button>
             </div>
           ) : (
-            <Link href="/login" className="flex items-center group-hover:justify-start w-full h-16 transition-colors duration-200 hover:bg-[#004a70] rounded-md group-hover:px-6 md:pl-6" onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/login" className="flex items-center group-hover:justify-start w-full h-16 transition-colors duration-200 hover:bg-black/10 rounded-md group-hover:px-6 md:pl-6" onClick={() => setIsMobileMenuOpen(false)}>
               <FiLogIn className="w-8 h-8 flex-shrink-0" />
               <span className={`ml-4 text-lg font-medium whitespace-nowrap transition-opacity duration-200 delay-100 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'} md:group-hover:opacity-100`}>
                 Entrar

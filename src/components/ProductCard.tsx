@@ -54,11 +54,9 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
       onClick={onClick}
       className="w-full text-left transition-transform duration-300 ease-in-out hover:-translate-y-2"
     >
-      <div className="w-full h-full rounded-xl shadow-lg bg-white bg-opacity-60 backdrop-filter backdrop-blur-lg p-4 flex flex-col sm:flex-row sm:space-x-4">
+      <div className="w-full h-full rounded-xl shadow-xl bg-component-bg p-4 flex flex-col sm:flex-row sm:space-x-4">
         {/* Image Container */}
-        {/* 1. Agregamos 'bg-white' para que se note el contenedor redondeado */}
-        {/* 2. Quitamos 'p-2' para que la imagen tenga más espacio */}
-        <div className="relative w-full sm:w-1/3 h-48 sm:h-auto flex-shrink-0 rounded-xl overflow-hidden bg-white">
+        <div className="relative w-full sm:w-1/3 h-48 sm:h-auto flex-shrink-0 rounded-xl overflow-hidden bg-background">
           <Image
             src={product.images[0]}
             alt={product.name}
@@ -70,16 +68,16 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
         {/* Content Container */}
         <div className="w-full sm:w-2/3 flex flex-col justify-between mt-4 sm:mt-0">
           <div>
-            <h3 className="text-lg font-bold" style={{ color: '#003049' }}>
+            <h3 className="text-lg font-bold text-primary-text">
               {product.name}
             </h3>
             
             {product.sizes && product.sizes.length > 0 && (
               <div className="mt-2">
-                <span className="text-sm font-semibold" style={{ color: '#D62828' }}>Talles:</span>
+                <span className="text-sm font-semibold text-red">Talles:</span>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {product.sizes.map(t => (
-                    <span key={t} className="text-xs font-medium px-2 py-1 rounded-full" style={{ backgroundColor: '#EAE2B7', color: '#003049' }}>
+                    <span key={t} className="text-xs font-medium px-2 py-1 rounded-full bg-background text-primary-text">
                       {t}
                     </span>
                   ))}
@@ -89,20 +87,20 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
           </div>
 
           <div className="text-right mt-4">
-            <span className="text-2xl font-extrabold" style={{ color: '#F77F00' }}>
+            <span className="text-2xl font-extrabold text-orange">
               ${product.price.toFixed(2)}
             </span>
           </div>
           <div className="mt-2 flex justify-end gap-2">
             <button 
-                className={`px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white ${isAdded ? 'bg-green-600' : 'bg-gray-600 hover:bg-gray-700'}`}
+                className={`px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white ${isAdded ? 'bg-green-600' : 'bg-primary-text hover:opacity-90'}`}
                 onClick={handleAddToCart}
                 disabled={isAdded}
             >
                 {isAdded ? '¡Añadido!' : 'Agregar al Carrito'}
             </button>
             <button 
-                className="px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                className="px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-orange hover:opacity-90"
                 onClick={handleBuyNow}
             >
                 Comprar

@@ -249,55 +249,55 @@ export default function ProductManager() {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md mt-8 text-gray-900">
+    <div className="p-6 bg-component-bg rounded-lg shadow-xl mt-8 text-primary-text">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Gestionar Productos</h2>
         <button
           onClick={openModalForAdd}
-          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+          className="px-4 py-2 bg-orange text-white rounded-md hover:opacity-90"
         >
           Añadir Producto
         </button>
       </div>
 
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {error && <p className="text-red mb-4">{error}</p>}
 
       <div className="overflow-x-auto">
         {loading ? (
           <p>Cargando...</p>
         ) : (
-          <table className="min-w-full bg-white">
+          <table className="min-w-full bg-background rounded-lg">
             <thead>
               <tr>
-                <th className="py-2 px-4 border-b">Nombre</th>
-                <th className="py-2 px-4 border-b">Categoría</th>
-                <th className="py-2 px-4 border-b">Precio</th>
-                <th className="py-2 px-4 border-b">Acciones</th>
+                <th className="py-2 px-4 border-b border-primary-text/20">Nombre</th>
+                <th className="py-2 px-4 border-b border-primary-text/20">Categoría</th>
+                <th className="py-2 px-4 border-b border-primary-text/20">Precio</th>
+                <th className="py-2 px-4 border-b border-primary-text/20">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {products.map((product) => (
                 <tr key={product.id}>
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 border-b border-primary-text/10 text-center">
                     {product.name}
                   </td>
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 border-b border-primary-text/10 text-center">
                     {product.category_name}
                   </td>
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 border-b border-primary-text/10 text-center">
                     ${product.price}
                   </td>
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 border-b border-primary-text/10 text-center">
                     <div className="flex justify-center gap-2">
                       <button
                         onClick={() => openModalForEdit(product)}
-                        className="text-sm text-blue-600 hover:text-blue-800"
+                        className="text-sm text-orange hover:opacity-80"
                       >
                         Editar
                       </button>
                       <button
                         onClick={() => handleDelete(product.id)}
-                        className="text-sm text-red-600 hover:text-red-800"
+                        className="text-sm text-red hover:opacity-80"
                       >
                         Eliminar
                       </button>
@@ -312,7 +312,7 @@ export default function ProductManager() {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto text-gray-900">
+          <div className="bg-component-bg p-8 rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto text-primary-text">
             <h3 className="text-2xl font-bold mb-6">
               {editingProduct ? "Editar Producto" : "Añadir Nuevo Producto"}
             </h3>
@@ -330,7 +330,7 @@ export default function ProductManager() {
                   type="text"
                   value={formState.name}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text"
                   required
                 />
               </div>
@@ -346,7 +346,7 @@ export default function ProductManager() {
                   name="description"
                   value={formState.description}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text"
                 />
               </div>
               <div>
@@ -363,7 +363,7 @@ export default function ProductManager() {
                   step="0.01"
                   value={formState.price}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text"
                   required
                 />
               </div>
@@ -379,7 +379,7 @@ export default function ProductManager() {
                   name="category_id"
                   value={formState.category_id}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text"
                   required
                 >
                   <option value="" disabled>
@@ -405,7 +405,7 @@ export default function ProductManager() {
                   type="number"
                   value={formState.stock_quantity}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text"
                 />
               </div>
               <div>
@@ -421,7 +421,7 @@ export default function ProductManager() {
                   type="text"
                   value={formState.sizes}
                   onChange={handleInputChange}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text"
                 />
               </div>
               <div>
@@ -447,11 +447,11 @@ export default function ProductManager() {
                   className={`w-full p-6 border-2 border-dashed rounded-md cursor-pointer text-center transition-colors
                     ${
                       isDragging
-                        ? "border-blue-500 bg-blue-50"
-                        : "border-gray-300 bg-gray-50 hover:bg-gray-100"
+                        ? "border-orange bg-orange/10"
+                        : "border-primary-text/30 bg-background hover:bg-black/5"
                     }`}
                 >
-                  <p className="text-gray-500">
+                  <p className="text-primary-text/70">
                     Arrastra y suelta imágenes aquí, o haz clic para seleccionar
                   </p>
                 </div>
@@ -469,7 +469,7 @@ export default function ProductManager() {
                       <button
                         type="button"
                         onClick={() => handleDeleteImage(index)}
-                        className="absolute top-1 right-1 bg-white text-red-600 border border-red-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold hover:bg-red-100"
+                        className="absolute top-1 right-1 bg-background text-red border border-red rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold hover:bg-red/10"
                         aria-label="Eliminar imagen"
                       >
                         X
@@ -482,13 +482,13 @@ export default function ProductManager() {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="px-4 py-2 bg-gray-300 rounded-md"
+                  className="px-4 py-2 bg-primary-text/20 rounded-md hover:bg-primary-text/30"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md"
+                  className="px-4 py-2 bg-orange text-white rounded-md hover:opacity-90"
                 >
                   {editingProduct ? "Guardar Cambios" : "Guardar Producto"}
                 </button>

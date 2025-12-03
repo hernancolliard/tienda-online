@@ -36,15 +36,15 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center">Recuperar Contraseña</h2>
-        <p className="text-center text-gray-600">
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="w-full max-w-md p-8 space-y-6 bg-component-bg rounded-lg shadow-xl">
+        <h2 className="text-2xl font-bold text-center text-primary-text">Recuperar Contraseña</h2>
+        <p className="text-center text-primary-text">
           Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
         </p>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="text-sm font-medium text-gray-700 sr-only">
+            <label htmlFor="email" className="text-sm font-medium text-primary-text sr-only">
               Correo electrónico
             </label>
             <input
@@ -55,7 +55,7 @@ export default function ForgotPasswordPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-primary-text/20 rounded-md shadow-sm bg-background text-primary-text placeholder-primary-text/50 focus:outline-none focus:ring-orange focus:border-orange"
               placeholder="tu@email.com"
             />
           </div>
@@ -63,14 +63,14 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-text hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange disabled:opacity-50"
             >
               {loading ? 'Enviando...' : 'Enviar Enlace'}
             </button>
           </div>
         </form>
-        {message && <p className="text-green-600 text-center">{message}</p>}
-        {error && <p className="text-red-600 text-center">{error}</p>}
+        {message && <p className="text-primary-text font-bold text-center">{message}</p>}
+        {error && <p className="text-red text-center">{error}</p>}
       </div>
     </div>
   );

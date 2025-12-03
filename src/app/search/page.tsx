@@ -37,13 +37,13 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-white">
+      <h1 className="text-3xl font-bold mb-6 text-primary-text">
         Resultados de búsqueda {query && `para "${query}"`}
       </h1>
       {error ? (
-        <p className="text-red-500">{error}</p>
+        <p className="text-red">{error}</p>
       ) : products.length === 0 ? (
-        <p className="text-white">No se encontraron productos que coincidan con tu búsqueda.</p>
+        <p className="text-primary-text">No se encontraron productos que coincidan con tu búsqueda.</p>
       ) : (
         <ProductList products={products} />
       )}

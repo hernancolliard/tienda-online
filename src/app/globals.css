@@ -4,11 +4,7 @@
 
 @layer base {
   body {
-    background-color: #003049; /* Fallback color */
-    color: #EAE2B7; /* Default text color for better contrast on dark bg */
-    background: linear-gradient(315deg, #002235, #003049, #004a70);
-    background-size: 400% 400%;
-    animation: move-bg 15s ease-in-out infinite;
+    @apply bg-background text-primary-text;
   }
 }
 

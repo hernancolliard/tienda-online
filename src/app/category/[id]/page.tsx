@@ -25,11 +25,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-white mb-6">Productos en Categoría</h1>
+      <h1 className="text-3xl font-bold text-primary-text mb-6">Productos en Categoría</h1>
       {products.length > 0 ? (
         <ProductList products={products} />
       ) : (
-        <p className="text-gray-600">No hay productos en esta categoría.</p>
+        <p className="text-primary-text">No hay productos en esta categoría.</p>
       )}
     </div>
   );

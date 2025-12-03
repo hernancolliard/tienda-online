@@ -58,12 +58,12 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="w-full max-w-md p-8 space-y-6 bg-component-bg rounded-lg shadow-xl text-primary-text">
         <h2 className="text-2xl font-bold text-center">Restablecer Contraseña</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="password">Nueva Contraseña</label>
+            <label htmlFor="password" className="text-sm font-medium">Nueva Contraseña</label>
             <input
               id="password"
               name="password"
@@ -71,11 +71,11 @@ export default function ResetPasswordPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm"
+              className="w-full px-3 py-2 mt-1 border border-primary-text/20 rounded-md shadow-sm bg-background text-primary-text"
             />
           </div>
           <div>
-            <label htmlFor="confirmPassword">Confirmar Nueva Contraseña</label>
+            <label htmlFor="confirmPassword"  className="text-sm font-medium">Confirmar Nueva Contraseña</label>
             <input
               id="confirmPassword"
               name="confirmPassword"
@@ -83,21 +83,21 @@ export default function ResetPasswordPage() {
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm"
+              className="w-full px-3 py-2 mt-1 border border-primary-text/20 rounded-md shadow-sm bg-background text-primary-text"
             />
           </div>
           <div>
             <button
               type="submit"
               disabled={loading || !!message}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-text hover:opacity-90 disabled:opacity-50"
             >
               {loading ? 'Actualizando...' : 'Restablecer Contraseña'}
             </button>
           </div>
         </form>
-        {message && <p className="text-green-600 text-center">{message}</p>}
-        {error && <p className="text-red-600 text-center">{error}</p>}
+        {message && <p className="text-primary-text font-bold text-center">{message}</p>}
+        {error && <p className="text-red text-center">{error}</p>}
       </div>
     </div>
   );

@@ -104,10 +104,10 @@ export default function CategoryManager() {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md mt-6 text-gray-900">
+    <div className="p-6 bg-component-bg rounded-lg shadow-xl mt-6 text-primary-text">
       <h2 className="text-xl font-semibold mb-4">Gestionar Categorías</h2>
       
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {error && <p className="text-red mb-4">{error}</p>}
 
       <form onSubmit={handleAddCategory} className="mb-6 flex gap-4">
         <input
@@ -115,9 +115,9 @@ export default function CategoryManager() {
           value={newCategoryName}
           onChange={(e) => setNewCategoryName(e.target.value)}
           placeholder="Nombre de la nueva categoría"
-          className="flex-grow p-2 border rounded-md"
+          className="flex-grow p-2 border rounded-md bg-background text-primary-text"
         />
-        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Añadir</button>
+        <button type="submit" className="px-4 py-2 bg-orange text-white rounded-md hover:opacity-90">Añadir</button>
       </form>
 
       {loading ? <p>Cargando...</p> : (
@@ -126,13 +126,13 @@ export default function CategoryManager() {
           {categories.length > 0 ? (
             <ul>
               {categories.map(category => (
-                <li key={category.id} className="flex justify-between items-center p-2 rounded-md hover:bg-gray-100">
+                <li key={category.id} className="flex justify-between items-center p-2 rounded-md hover:bg-black/10">
                   {editingCategoryId === category.id ? (
                     <input
                       type="text"
                       value={editingCategoryName}
                       onChange={(e) => setEditingCategoryName(e.target.value)}
-                      className="flex-grow p-1 border rounded-md"
+                      className="flex-grow p-1 border rounded-md bg-background text-primary-text"
                     />
                   ) : (
                     <span>{category.name}</span>
@@ -140,13 +140,13 @@ export default function CategoryManager() {
                   <div className="flex gap-2">
                     {editingCategoryId === category.id ? (
                       <>
-                        <button onClick={() => handleSaveEdit(category.id)} className="text-sm text-green-600 hover:text-green-800">Guardar</button>
-                        <button onClick={handleCancelEdit} className="text-sm text-gray-600 hover:text-gray-800">Cancelar</button>
+                        <button onClick={() => handleSaveEdit(category.id)} className="text-sm text-primary-text hover:text-orange">Guardar</button>
+                        <button onClick={handleCancelEdit} className="text-sm text-primary-text/70 hover:text-primary-text">Cancelar</button>
                       </>
                     ) : (
                       <>
-                        <button onClick={() => handleEdit(category)} className="text-sm text-blue-600 hover:text-blue-800">Editar</button>
-                        <button onClick={() => handleDelete(category.id)} className="text-sm text-red-600 hover:text-red-800">Eliminar</button>
+                        <button onClick={() => handleEdit(category)} className="text-sm text-orange hover:opacity-80">Editar</button>
+                        <button onClick={() => handleDelete(category.id)} className="text-sm text-red hover:opacity-80">Eliminar</button>
                       </>
                     )}
                   </div>

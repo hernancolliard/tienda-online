@@ -42,52 +42,52 @@ export default function RegisterPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white bg-opacity-70 rounded-xl shadow-lg backdrop-filter backdrop-blur-md">
-        <h1 className="text-3xl font-bold text-center text-[#003049]">Crear una Cuenta</h1>
+      <div className="w-full max-w-md p-8 space-y-6 bg-component-bg rounded-xl shadow-xl">
+        <h1 className="text-3xl font-bold text-center text-primary-text">Crear una Cuenta</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="name" className="text-sm font-medium text-[#003049]">Nombre</label>
+            <label htmlFor="name" className="text-sm font-medium text-primary-text">Nombre</label>
             <input
               id="name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F77F00]"
+              className="w-full px-4 py-2 mt-2 text-primary-text bg-background border border-primary-text/20 rounded-md focus:outline-none focus:ring-2 focus:ring-orange"
             />
           </div>
           <div>
-            <label htmlFor="email" className="text-sm font-medium text-[#003049]">Email</label>
+            <label htmlFor="email" className="text-sm font-medium text-primary-text">Email</label>
             <input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F77F00]"
+              className="w-full px-4 py-2 mt-2 text-primary-text bg-background border border-primary-text/20 rounded-md focus:outline-none focus:ring-2 focus:ring-orange"
             />
           </div>
           <div>
-            <label htmlFor="password" className="text-sm font-medium text-[#003049]">Contraseña</label>
+            <label htmlFor="password" className="text-sm font-medium text-primary-text">Contraseña</label>
             <input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#F77F00]"
+              className="w-full px-4 py-2 mt-2 text-primary-text bg-background border border-primary-text/20 rounded-md focus:outline-none focus:ring-2 focus:ring-orange"
             />
           </div>
-          {error && <p className="text-sm text-red-600 text-center">{error}</p>}
+          {error && <p className="text-sm text-red text-center">{error}</p>}
           <div>
-            <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-[#003049] rounded-md hover:bg-[#004a70] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F77F00] transition-colors duration-300">
+            <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-primary-text rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange transition-colors duration-300">
               Registrarse
             </button>
           </div>
         </form>
-        <p className="text-sm text-center text-gray-600">
+        <p className="text-sm text-center text-primary-text">
           ¿Ya tienes una cuenta?{' '}
-          <Link href="/login" className="font-medium text-[#F77F00] hover:underline">
+          <Link href="/login" className="font-medium text-orange hover:underline">
             Inicia sesión
           </Link>
         </p>
