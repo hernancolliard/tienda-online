@@ -50,64 +50,44 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
   };
 
   return (
-    <button
+    <div
       onClick={onClick}
-      className="w-full text-left transition-transform duration-300 ease-in-out hover:-translate-y-2"
+      className="relative aspect-square w-full overflow-hidden group cursor-pointer"
     >
-      <div className="w-full h-full rounded-xl shadow-xl bg-component-bg p-4 flex flex-col sm:flex-row sm:space-x-4">
-        {/* Image Container */}
-        <div className="relative w-full sm:w-1/3 h-48 sm:h-auto flex-shrink-0 rounded-xl overflow-hidden bg-white">
-          <Image
-            src={product.images[0]}
-            alt={product.name}
-            fill
-            className="object-contain" // Ya no es necesario rounded aquí si el padre recorta
-          />
-        </div>
-
-        {/* Content Container */}
-        <div className="w-full sm:w-2/3 flex flex-col justify-between mt-4 sm:mt-0">
-          <div>
-            <h3 className="text-lg font-bold text-primary-text">
-              {product.name}
-            </h3>
-            
-            {product.sizes && product.sizes.length > 0 && (
-              <div className="mt-2">
-                <span className="text-sm font-semibold text-red">Talles:</span>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {product.sizes.map(t => (
-                    <span key={t} className="text-xs font-medium px-2 py-1 rounded-full bg-background text-primary-text">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="text-right mt-4">
-            <span className="text-2xl font-extrabold text-primary-text">
-              ${product.price.toFixed(2)}
-            </span>
-          </div>
-          <div className="mt-2 flex justify-end gap-2">
-            <button 
-                className={`px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white ${isAdded ? 'bg-green-600' : 'bg-primary-text hover:opacity-90'}`}
-                onClick={handleAddToCart}
-                disabled={isAdded}
-            >
-                {isAdded ? '¡Añadido!' : 'Agregar al Carrito'}
-            </button>
-            <button 
-                className="px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-primary-text hover:opacity-90"
-                onClick={handleBuyNow}
-            >
-                Comprar
-            </button>
-          </div>
+      {/* Image Background */}
+      <Image
+        src={product.images[0]}
+        alt={product.name}
+        fill
+        className="object-cover w-full h-full transition-transform duration-300 ease-in-out group-hover:scale-110"
+      />
+      
+      {/* Overlay and Content on Hover */}
+      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300"></div>
+      
+      <div className="absolute inset-0 flex flex-col justify-end p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out bg-gradient-to-t from-black/80 via-black/50 to-transparent">
+        <h3 className="text-lg font-bold">
+          {product.name}
+        </h3>
+        <p className="text-xl font-extrabold mt-1">
+          ${product.price.toFixed(2)}
+        </p>
+        <div className="mt-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+          <button 
+              className={`px-3 py-1 text-xs font-medium rounded ${isAdded ? 'bg-green-600' : 'bg-white text-black hover:bg-gray-200'}`}
+              onClick={handleAddToCart}
+              disabled={isAdded}
+          >
+              {isAdded ? '¡Añadido!' : 'Agregar'}
+          </button>
+          <button 
+              className="px-3 py-1 text-xs font-medium rounded bg-blue-500 hover:bg-blue-600 text-white"
+              onClick={handleBuyNow}
+          >
+              Comprar
+          </button>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
