@@ -10,7 +10,7 @@ interface Testimonial {
 
 async function getTestimonials(): Promise<Testimonial[]> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/testimonials`, {
+    const res = await fetch(`/api/testimonials`, {
       cache: 'no-store',
     });
     if (!res.ok) {

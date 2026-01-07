@@ -4,17 +4,34 @@ import { useState } from "react";
 
 const Newsletter = () => {
   const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement actual newsletter subscription logic
-    // For now, just show a success message.
-    if (email && email.includes('@')) {
-      setMessage(`¡Gracias por suscribirte, ${email}! (Funcionalidad en desarrollo)`);
+    setStatus('loading');
+    setMessage('');
+
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Algo salió mal.');
+      }
+
+      setStatus('success');
+      setMessage(data.message);
       setEmail('');
-    } else {
-      setMessage('Por favor, introduce un email válido.');
+
+    } catch (error) {
+      setStatus('error');
+      setMessage(error instanceof Error ? error.message : 'No se pudo completar la suscripción.');
     }
   };
 
@@ -35,15 +52,21 @@ const Newsletter = () => {
             placeholder="Tu dirección de email"
             className="w-full p-3 rounded-l-lg border-0 text-primary-text focus:ring-2 focus:ring-mango"
             required
+            disabled={status === 'loading'}
           />
           <button
             type="submit"
-            className="bg-orange text-white font-bold py-3 px-6 rounded-r-lg hover:bg-mango transition-colors"
+            className="bg-orange text-white font-bold py-3 px-6 rounded-r-lg hover:bg-mango transition-colors disabled:opacity-70"
+            disabled={status === 'loading'}
           >
-            Suscribirme
+            {status === 'loading' ? 'Enviando...' : 'Suscribirme'}
           </button>
         </form>
-        {message && <p className="mt-4 text-sm">{message}</p>}
+        {message && (
+          <p className={`mt-4 text-sm ${status === 'error' ? 'text-red-400' : 'text-green-400'}`}>
+            {message}
+          </p>
+        )}
       </div>
     </section>
   );
