@@ -49,7 +49,7 @@ const Testimonials = async () => {
                   />
                 ))}
               </div>
-              <p className="text-gray-600 italic mb-4 flex-grow">"{testimonial.comment}"</p>
+              <p className="text-gray-600 italic mb-4 flex-grow">&ldquo;{testimonial.comment}&rdquo;</p>
               <p className="font-bold text-right text-primary-text">- {testimonial.user_name}</p>
             </div>
           ))}
