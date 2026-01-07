@@ -46,6 +46,19 @@ const Footer = () => {
           </div>
 
         </div>
+        <div className="text-center mt-8">
+          <p>
+            Desarrollado por{' '}
+            <a 
+              href="https://paranadev.onrender.com/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-mango hover:underline"
+            >
+              ParanaDev
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );

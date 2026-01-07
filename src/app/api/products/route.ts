@@ -2,6 +2,11 @@ import { db } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
+import { Resend } from 'resend';
+import NewProductEmail from '@/components/emails/NewProductEmail';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+const fromEmail = process.env.EMAIL_FROM || 'onboarding@resend.dev';
 
 export async function GET(req: NextRequest) {
   try {
@@ -98,8 +103,6 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    console.log('Received request body:', JSON.stringify(body, null, 2));
-
     const {
       name,
       description,
@@ -110,9 +113,6 @@ export async function POST(req: NextRequest) {
       sizes,
     } = body;
 
-    console.log('Parsed images from body:', images);
-
-    // Validación simple
     if (!name || !price || !category_id) {
       return NextResponse.json({ message: 'Nombre, precio y categoría son requeridos' }, { status: 400 });
     }
@@ -124,7 +124,37 @@ export async function POST(req: NextRequest) {
       [name, description, parseFloat(price), images, parseInt(category_id), parseInt(stock_quantity), sizes]
     );
 
-    return NextResponse.json(rows[0], { status: 201 });
+    const newProduct = rows[0];
+
+    // Envío de correo a suscriptores
+    try {
+      const { rows: subscribers } = await db.query('SELECT email FROM subscribers');
+      
+      if (subscribers.length > 0) {
+        const emails = subscribers.map(s => s.email);
+        
+        console.log(`Enviando correos a ${emails.length} suscriptores.`);
+
+        await resend.emails.send({
+          from: fromEmail,
+          to: emails, // Resend maneja el envío a múltiples destinatarios
+          subject: '¡Nuevo producto disponible!',
+          react: NewProductEmail({
+            productName: newProduct.name,
+            productDescription: newProduct.description,
+            productImage: newProduct.images && newProduct.images.length > 0 ? newProduct.images[0] : '',
+            productUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/category/${newProduct.category_id}`,
+          }),
+        });
+
+        console.log('Correos de nuevo producto enviados exitosamente.');
+      }
+    } catch (emailError) {
+      console.error('Error al enviar correos de nuevo producto:', emailError);
+      // No devolvemos un error aquí para no interrumpir la respuesta principal
+    }
+
+    return NextResponse.json(newProduct, { status: 201 });
   } catch (error) {
     console.error('Error creating product:', error);
     return NextResponse.json({ message: 'Error interno del servidor' }, { status: 500 });
