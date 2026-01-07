@@ -128,7 +128,7 @@ export async function POST(req: NextRequest) {
       `INSERT INTO products (name, description, price, images, category_id, stock_quantity, sizes, discount_percentage)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING *`,
-      [name, description, parseFloat(price), images, parseInt(category_id), parseInt(stock_quantity), sizes, parseInt(discount_percentage) || 0]
+      [name, description, parseFloat(price), images, parseInt(category_id, 10), parseInt(stock_quantity, 10), sizes, parseInt(discount_percentage, 10) || 0]
     );
 
     const newProduct = rows[0];

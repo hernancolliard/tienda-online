@@ -43,7 +43,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         discount_percentage = $9
        WHERE id = $10 
        RETURNING *`,
-      [name, description, parseFloat(price), images, parseInt(category_id), parseInt(stock_quantity), sizes, is_featured, parseInt(discount_percentage) || 0, id]
+      [name, description, parseFloat(price), images, parseInt(category_id, 10), parseInt(stock_quantity, 10), sizes, is_featured, parseInt(discount_percentage, 10) || 0, id]
     );
 
     if (rows.length === 0) {
