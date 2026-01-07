@@ -1,26 +1,32 @@
 import CategoryCard from './CategoryCard';
 
-// Mock data until the API is updated
-const mockCategories = [
-  { id: 1, name: 'Remeras', image_url: '/imagen-general.png' },
-  { id: 2, name: 'Pantalones', image_url: '/imagen-general.png' },
-  { id: 3, name: 'Buzos', image_url: '/imagen-general.png' },
-  { id: 4, name: 'Accesorios', image_url: '/imagen-general.png' },
-];
-
-async function getCategories() {
-  // TODO: Replace with actual API call when ready
-  // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`);
-  // if (!res.ok) {
-  //   throw new Error('Failed to fetch categories');
-  // }
-  // return res.json();
-  return mockCategories;
+interface Category {
+  id: number;
+  name: string;
+  image_url: string;
 }
 
+async function getCategories(): Promise<Category[]> {
+  try {
+    const res = await fetch(`/api/categories`, {
+      cache: 'no-store', // Always fetch the latest
+    });
+    if (!res.ok) {
+      throw new Error('Failed to fetch categories');
+    }
+    return res.json();
+  } catch (error) {
+    console.error('FETCH_CATEGORIES_ERROR:', error);
+    return [];
+  }
+}
 
 const CategoryListHome = async () => {
   const categories = await getCategories();
+
+  if (categories.length === 0) {
+    return null; // Don't render if no categories
+  }
 
   return (
     <section className="py-12 bg-background">
