@@ -8,6 +8,7 @@ import NewArrivals from '@/components/NewArrivals';
 import AboutBrand from '@/components/AboutBrand';
 import Testimonials from '@/components/Testimonials';
 import Newsletter from '@/components/Newsletter';
+import InstagramFeed from '@/components/InstagramFeed'; // Import InstagramFeed
 
 // This is a Server Component, so we can fetch data directly.
 async function getFeaturedProducts(): Promise<Product[]> {
@@ -44,6 +45,7 @@ export default async function Home() {
       <NewArrivals />
       <AboutBrand />
       <Testimonials />
+      <InstagramFeed /> {/* Add InstagramFeed here */}
       <Newsletter />
     </>
   );

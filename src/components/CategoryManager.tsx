@@ -1,21 +1,25 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image'; // Import Image component
 
 interface Category {
   id: number;
   name: string;
+  image_url: string; // Add image_url to the interface
 }
 
 export default function CategoryManager() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryImageUrl, setNewCategoryImageUrl] = useState(''); // State for new image URL
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // State para la edición
   const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
   const [editingCategoryName, setEditingCategoryName] = useState('');
+  const [editingCategoryImageUrl, setEditingCategoryImageUrl] = useState(''); // State for editing image URL
 
   const fetchCategories = async () => {
     try {
@@ -44,7 +48,7 @@ export default function CategoryManager() {
       const res = await fetch('/api/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newCategoryName }),
+        body: JSON.stringify({ name: newCategoryName, image_url: newCategoryImageUrl }), // Send image_url
       });
       if (!res.ok) {
         const errorData = await res.json();
@@ -52,6 +56,7 @@ export default function CategoryManager() {
       }
       await fetchCategories();
       setNewCategoryName('');
+      setNewCategoryImageUrl(''); // Clear image URL field
     } catch (err: any) {
       setError(err.message);
     }
@@ -75,11 +80,13 @@ export default function CategoryManager() {
   const handleEdit = (category: Category) => {
     setEditingCategoryId(category.id);
     setEditingCategoryName(category.name);
+    setEditingCategoryImageUrl(category.image_url); // Set image URL for editing
   };
 
   const handleCancelEdit = () => {
     setEditingCategoryId(null);
     setEditingCategoryName('');
+    setEditingCategoryImageUrl('');
   };
 
   const handleSaveEdit = async (id: number) => {
@@ -90,7 +97,7 @@ export default function CategoryManager() {
       const res = await fetch(`/api/categories/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: editingCategoryName }),
+        body: JSON.stringify({ name: editingCategoryName, image_url: editingCategoryImageUrl }), // Send image_url
       });
       if (!res.ok) {
         const errorData = await res.json();
@@ -109,15 +116,22 @@ export default function CategoryManager() {
       
       {error && <p className="text-red mb-4">{error}</p>}
 
-      <form onSubmit={handleAddCategory} className="mb-6 flex gap-4">
+      <form onSubmit={handleAddCategory} className="mb-6 space-y-4">
         <input
           type="text"
           value={newCategoryName}
           onChange={(e) => setNewCategoryName(e.target.value)}
           placeholder="Nombre de la nueva categoría"
-          className="flex-grow p-2 border rounded-md bg-background text-primary-text"
+          className="w-full p-2 border rounded-md bg-background text-primary-text"
         />
-        <button type="submit" className="px-4 py-2 bg-primary-text text-white rounded-md hover:opacity-90">Añadir</button>
+        <input
+          type="text"
+          value={newCategoryImageUrl}
+          onChange={(e) => setNewCategoryImageUrl(e.target.value)}
+          placeholder="URL de la imagen de la categoría (opcional)"
+          className="w-full p-2 border rounded-md bg-background text-primary-text"
+        />
+        <button type="submit" className="w-full px-4 py-2 bg-primary-text text-white rounded-md hover:opacity-90">Añadir Categoría</button>
       </form>
 
       {loading ? <p>Cargando...</p> : (
@@ -127,16 +141,32 @@ export default function CategoryManager() {
             <ul>
               {categories.map(category => (
                 <li key={category.id} className="flex justify-between items-center p-2 rounded-md hover:bg-black/10">
-                  {editingCategoryId === category.id ? (
-                    <input
-                      type="text"
-                      value={editingCategoryName}
-                      onChange={(e) => setEditingCategoryName(e.target.value)}
-                      className="flex-grow p-1 border rounded-md bg-background text-primary-text"
-                    />
-                  ) : (
-                    <span>{category.name}</span>
-                  )}
+                  <div className="flex items-center gap-2 flex-grow">
+                    {editingCategoryId === category.id ? (
+                      <div className="flex flex-col flex-grow">
+                        <input
+                          type="text"
+                          value={editingCategoryName}
+                          onChange={(e) => setEditingCategoryName(e.target.value)}
+                          className="flex-grow p-1 border rounded-md bg-background text-primary-text mb-1"
+                        />
+                        <input
+                          type="text"
+                          value={editingCategoryImageUrl}
+                          onChange={(e) => setEditingCategoryImageUrl(e.target.value)}
+                          className="flex-grow p-1 border rounded-md bg-background text-primary-text"
+                          placeholder="URL de la imagen"
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        {category.image_url && (
+                            <Image src={category.image_url} alt={category.name} width={40} height={40} className="rounded-md object-cover" />
+                        )}
+                        <span>{category.name}</span>
+                      </>
+                    )}
+                  </div>
                   <div className="flex gap-2">
                     {editingCategoryId === category.id ? (
                       <>

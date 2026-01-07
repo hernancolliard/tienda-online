@@ -5,6 +5,7 @@ import CategoryManager from "@/components/CategoryManager"
 import ProductManager from "@/components/ProductManager"
 import FeaturedManager from "@/components/FeaturedManager"
 import TestimonialManager from "@/components/TestimonialManager"
+import InstagramManager from "@/components/InstagramManager"
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions)
@@ -30,6 +31,10 @@ export default async function AdminPage() {
 
       <div className="mt-8">
         <TestimonialManager />
+      </div>
+
+      <div className="mt-8">
+        <InstagramManager />
       </div>
 
     </div>

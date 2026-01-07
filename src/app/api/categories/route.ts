@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { name } = await req.json();
+    const { name, image_url } = await req.json();
 
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return NextResponse.json({ message: 'El nombre es requerido' }, { status: 400 });
@@ -33,9 +33,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'La categoría ya existe' }, { status: 409 });
     }
 
+    const finalImageUrl = image_url || '/imagen-general.png'; // Usar imagen por defecto si no se provee
+
     const { rows } = await db.query(
-      'INSERT INTO categories (name) VALUES ($1) RETURNING *',
-      [name.trim()]
+      'INSERT INTO categories (name, image_url) VALUES ($1, $2) RETURNING *',
+      [name.trim(), finalImageUrl]
     );
 
     return NextResponse.json(rows[0], { status: 201 });

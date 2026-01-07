@@ -14,26 +14,24 @@ export async function PUT(
 
   try {
     const { id } = params;
-    const { name, image_url } = await req.json();
+    const { image_url, caption, post_link } = await req.json();
 
-    if (!name || typeof name !== 'string' || name.trim().length === 0) {
-      return NextResponse.json({ message: 'El nombre es requerido' }, { status: 400 });
+    if (!image_url || typeof image_url !== 'string' || image_url.trim().length === 0) {
+      return NextResponse.json({ message: 'La URL de la imagen es requerida' }, { status: 400 });
     }
 
-    const finalImageUrl = image_url || '/imagen-general.png'; // Usar imagen por defecto si no se provee
-
     const { rows } = await db.query(
-      'UPDATE categories SET name = $1, image_url = $2 WHERE id = $3 RETURNING *',
-      [name.trim(), finalImageUrl, id]
+      'UPDATE instagram_posts SET image_url = $1, caption = $2, post_link = $3 WHERE id = $4 RETURNING *',
+      [image_url, caption, post_link, id]
     );
 
     if (rows.length === 0) {
-      return NextResponse.json({ message: 'Categoría no encontrada' }, { status: 404 });
+      return NextResponse.json({ message: 'Publicación de Instagram no encontrada' }, { status: 404 });
     }
 
     return NextResponse.json(rows[0]);
   } catch (error) {
-    console.error(`Error updating category ${params.id}:`, error);
+    console.error(`Error updating Instagram post ${params.id}:`, error);
     return NextResponse.json({ message: 'Error interno del servidor' }, { status: 500 });
   }
 }
@@ -49,15 +47,15 @@ export async function DELETE(
 
   try {
     const { id } = params;
-    const { rowCount } = await db.query('DELETE FROM categories WHERE id = $1', [id]);
+    const { rowCount } = await db.query('DELETE FROM instagram_posts WHERE id = $1', [id]);
 
     if (rowCount === 0) {
-      return NextResponse.json({ message: 'Categoría no encontrada' }, { status: 404 });
+      return NextResponse.json({ message: 'Publicación de Instagram no encontrada' }, { status: 404 });
     }
 
     return new NextResponse(null, { status: 204 }); // No Content
   } catch (error) {
-    console.error(`Error deleting category ${params.id}:`, error);
+    console.error(`Error deleting Instagram post ${params.id}:`, error);
     return NextResponse.json({ message: 'Error interno del servidor' }, { status: 500 });
   }
 }
