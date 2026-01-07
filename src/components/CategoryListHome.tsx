@@ -11,10 +11,16 @@ async function getCategories(): Promise<Category[]> {
     const res = await fetch(`/api/categories`, {
       cache: 'no-store', // Always fetch the latest
     });
+    
     if (!res.ok) {
-      throw new Error('Failed to fetch categories');
+      const errorText = await res.text();
+      console.error('API Error Response:', errorText);
+      throw new Error(`Failed to fetch categories: ${res.status} ${res.statusText}`);
     }
-    return res.json();
+    
+    const categories: Category[] = await res.json();
+    console.log('Fetched Categories:', categories); // Log fetched categories
+    return categories;
   } catch (error) {
     console.error('FETCH_CATEGORIES_ERROR:', error);
     return [];
