@@ -10,6 +10,8 @@ import Testimonials from '@/components/Testimonials';
 import Newsletter from '@/components/Newsletter';
 import InstagramFeed from '@/components/InstagramFeed'; // Import InstagramFeed
 
+export const dynamic = 'force-dynamic'; // Force dynamic rendering for this page
+
 // This is a Server Component, so we can fetch data directly.
 async function getFeaturedProducts(): Promise<Product[]> {
   try {
