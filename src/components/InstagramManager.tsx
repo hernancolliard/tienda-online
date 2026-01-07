@@ -15,14 +15,14 @@ interface InstagramPost {
 
 const InstagramManager = () => {
   const [posts, setPosts] = useState<InstagramPost[]>([]);
-  const [newImageUrl, setNewImageUrl] = useState('');
+  const [newImage, setNewImage] = useState('');
   const [newCaption, setNewCaption] = useState('');
   const [newPostLink, setNewPostLink] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [editingPostId, setEditingPostId] = useState<number | null>(null);
-  const [editingImageUrl, setEditingImageUrl] = useState('');
+  const [editingImage, setEditingImage] = useState('');
   const [editingCaption, setEditingCaption] = useState('');
   const [editingPostLink, setEditingPostLink] = useState('');
 
@@ -44,23 +44,34 @@ const InstagramManager = () => {
     fetchPosts();
   }, []);
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, setImage: (value: string) => void) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAddPost = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    if (!newImageUrl.trim()) return setError('La URL de la imagen es requerida.');
+    if (!newImage.trim()) return setError('La imagen es requerida.');
 
     try {
       const res = await fetch('/api/instagram', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image_url: newImageUrl, caption: newCaption, post_link: newPostLink }),
+        body: JSON.stringify({ image_url: newImage, caption: newCaption, post_link: newPostLink }),
       });
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.message || 'No se pudo crear la publicación.');
       }
       await fetchPosts();
-      setNewImageUrl('');
+      setNewImage('');
       setNewCaption('');
       setNewPostLink('');
     } catch (err: any) {
@@ -81,27 +92,27 @@ const InstagramManager = () => {
 
   const handleEdit = (post: InstagramPost) => {
     setEditingPostId(post.id);
-    setEditingImageUrl(post.image_url);
+    setEditingImage(post.image_url);
     setEditingCaption(post.caption || '');
     setEditingPostLink(post.post_link || '');
   };
 
   const handleCancelEdit = () => {
     setEditingPostId(null);
-    setEditingImageUrl('');
+    setEditingImage('');
     setEditingCaption('');
     setEditingPostLink('');
   };
 
   const handleSaveEdit = async (id: number) => {
     setError(null);
-    if (!editingImageUrl.trim()) return setError('La URL de la imagen es requerida.');
+    if (!editingImage.trim()) return setError('La imagen es requerida.');
 
     try {
       const res = await fetch(`/api/instagram/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image_url: editingImageUrl, caption: editingCaption, post_link: editingPostLink }),
+        body: JSON.stringify({ image_url: editingImage, caption: editingCaption, post_link: editingPostLink }),
       });
       if (!res.ok) {
         const errorData = await res.json();
@@ -119,19 +130,26 @@ const InstagramManager = () => {
 
   return (
     <div className="p-6 bg-component-bg rounded-lg shadow-xl mt-6 text-primary-text">
-      <h2 className="text-xl font-semibold mb-4">Gestionar Publicaciones de Instagram (Simulado)</h2>
+      <h2 className="text-xl font-semibold mb-4">Gestionar Publicaciones de Instagram</h2>
       
       {error && <p className="text-red mb-4">{error}</p>}
 
       <form onSubmit={handleAddPost} className="mb-6 space-y-4">
-        <input
-          type="text"
-          value={newImageUrl}
-          onChange={(e) => setNewImageUrl(e.target.value)}
-          placeholder="URL de la imagen"
-          className="w-full p-2 border rounded-md bg-background text-primary-text"
-          required
-        />
+        <div>
+          <label className="block text-sm font-medium mb-1">Imagen</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImageChange(e, setNewImage)}
+            className="w-full text-sm text-primary-text file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-mango file:text-white hover:file:opacity-90"
+            required
+          />
+          {newImage && (
+            <div className="mt-4">
+              <Image src={newImage} alt="Previsualización" width={100} height={100} className="rounded-md object-cover" />
+            </div>
+          )}
+        </div>
         <input
           type="text"
           value={newCaption}
@@ -157,14 +175,20 @@ const InstagramManager = () => {
               <div key={post.id} className="bg-white p-4 rounded-lg shadow-md">
                 {editingPostId === post.id ? (
                   <div className="flex flex-col gap-2">
-                    <input
-                      type="text"
-                      value={editingImageUrl}
-                      onChange={(e) => setEditingImageUrl(e.target.value)}
-                      className="p-1 border rounded-md bg-background text-primary-text"
-                      placeholder="URL de la imagen"
-                      required
-                    />
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Imagen</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageChange(e, setEditingImage)}
+                        className="w-full text-sm text-primary-text file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-mango file:text-white hover:file:opacity-90"
+                      />
+                      {editingImage && (
+                        <div className="mt-2">
+                          <Image src={editingImage} alt="Previsualización" width={80} height={80} className="rounded-md object-cover" />
+                        </div>
+                      )}
+                    </div>
                     <textarea
                       value={editingCaption}
                       onChange={(e) => setEditingCaption(e.target.value)}

@@ -1,25 +1,24 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image'; // Import Image component
+import Image from 'next/image';
 
 interface Category {
   id: number;
   name: string;
-  image_url: string; // Add image_url to the interface
+  image_url: string;
 }
 
 export default function CategoryManager() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [newCategoryName, setNewCategoryName] = useState('');
-  const [newCategoryImageUrl, setNewCategoryImageUrl] = useState(''); // State for new image URL
+  const [newCategoryImage, setNewCategoryImage] = useState<string>(''); // State for new image base64
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // State para la edición
   const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
   const [editingCategoryName, setEditingCategoryName] = useState('');
-  const [editingCategoryImageUrl, setEditingCategoryImageUrl] = useState(''); // State for editing image URL
+  const [editingCategoryImage, setEditingCategoryImage] = useState<string>(''); // State for editing image base64
 
   const fetchCategories = async () => {
     try {
@@ -39,6 +38,17 @@ export default function CategoryManager() {
     fetchCategories();
   }, []);
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, setImage: (value: string) => void) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -48,7 +58,7 @@ export default function CategoryManager() {
       const res = await fetch('/api/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newCategoryName, image_url: newCategoryImageUrl }), // Send image_url
+        body: JSON.stringify({ name: newCategoryName, image_url: newCategoryImage }),
       });
       if (!res.ok) {
         const errorData = await res.json();
@@ -56,7 +66,7 @@ export default function CategoryManager() {
       }
       await fetchCategories();
       setNewCategoryName('');
-      setNewCategoryImageUrl(''); // Clear image URL field
+      setNewCategoryImage('');
     } catch (err: any) {
       setError(err.message);
     }
@@ -80,13 +90,13 @@ export default function CategoryManager() {
   const handleEdit = (category: Category) => {
     setEditingCategoryId(category.id);
     setEditingCategoryName(category.name);
-    setEditingCategoryImageUrl(category.image_url); // Set image URL for editing
+    setEditingCategoryImage(category.image_url);
   };
 
   const handleCancelEdit = () => {
     setEditingCategoryId(null);
     setEditingCategoryName('');
-    setEditingCategoryImageUrl('');
+    setEditingCategoryImage('');
   };
 
   const handleSaveEdit = async (id: number) => {
@@ -97,7 +107,7 @@ export default function CategoryManager() {
       const res = await fetch(`/api/categories/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: editingCategoryName, image_url: editingCategoryImageUrl }), // Send image_url
+        body: JSON.stringify({ name: editingCategoryName, image_url: editingCategoryImage }),
       });
       if (!res.ok) {
         const errorData = await res.json();
@@ -124,13 +134,20 @@ export default function CategoryManager() {
           placeholder="Nombre de la nueva categoría"
           className="w-full p-2 border rounded-md bg-background text-primary-text"
         />
-        <input
-          type="text"
-          value={newCategoryImageUrl}
-          onChange={(e) => setNewCategoryImageUrl(e.target.value)}
-          placeholder="URL de la imagen de la categoría (opcional)"
-          className="w-full p-2 border rounded-md bg-background text-primary-text"
-        />
+        <div>
+            <label className="block text-sm font-medium mb-1">Imagen de la Categoría</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageChange(e, setNewCategoryImage)}
+              className="w-full text-sm text-primary-text file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-mango file:text-white hover:file:opacity-90"
+            />
+            {newCategoryImage && (
+              <div className="mt-4">
+                <Image src={newCategoryImage} alt="Previsualización" width={80} height={80} className="rounded-md object-cover" />
+              </div>
+            )}
+        </div>
         <button type="submit" className="w-full px-4 py-2 bg-primary-text text-white rounded-md hover:opacity-90">Añadir Categoría</button>
       </form>
 
@@ -141,22 +158,28 @@ export default function CategoryManager() {
             <ul>
               {categories.map(category => (
                 <li key={category.id} className="flex justify-between items-center p-2 rounded-md hover:bg-black/10">
-                  <div className="flex items-center gap-2 flex-grow">
+                  <div className="flex items-center gap-4 flex-grow">
                     {editingCategoryId === category.id ? (
-                      <div className="flex flex-col flex-grow">
+                      <div className="flex flex-col flex-grow gap-2">
                         <input
                           type="text"
                           value={editingCategoryName}
                           onChange={(e) => setEditingCategoryName(e.target.value)}
-                          className="flex-grow p-1 border rounded-md bg-background text-primary-text mb-1"
-                        />
-                        <input
-                          type="text"
-                          value={editingCategoryImageUrl}
-                          onChange={(e) => setEditingCategoryImageUrl(e.target.value)}
                           className="flex-grow p-1 border rounded-md bg-background text-primary-text"
-                          placeholder="URL de la imagen"
                         />
+                        <div>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleImageChange(e, setEditingCategoryImage)}
+                              className="w-full text-sm text-primary-text file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-mango file:text-white hover:file:opacity-90"
+                            />
+                            {editingCategoryImage && (
+                              <div className="mt-2">
+                                <Image src={editingCategoryImage} alt="Previsualización" width={60} height={60} className="rounded-md object-cover" />
+                              </div>
+                            )}
+                        </div>
                       </div>
                     ) : (
                       <>
