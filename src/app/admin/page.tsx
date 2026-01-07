@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import CategoryManager from "@/components/CategoryManager"
 import ProductManager from "@/components/ProductManager"
 import FeaturedManager from "@/components/FeaturedManager"
+import TestimonialManager from "@/components/TestimonialManager"
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions)
@@ -25,6 +26,10 @@ export default async function AdminPage() {
         <div>
           <ProductManager />
         </div>
+      </div>
+
+      <div className="mt-8">
+        <TestimonialManager />
       </div>
 
     </div>
