@@ -49,11 +49,23 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
     }
   };
 
+  const hasDiscount = product.discount_percentage && product.discount_percentage > 0;
+  const discountedPrice = hasDiscount
+    ? product.price - (product.price * product.discount_percentage!) / 100
+    : product.price;
+
   return (
     <div
       onClick={onClick}
       className="relative aspect-square w-full overflow-hidden group cursor-pointer"
     >
+      {/* Discount Badge */}
+      {hasDiscount && (
+        <div className="absolute top-2 right-2 bg-red text-white text-xs font-bold px-2 py-1 rounded-full z-10">
+          {product.discount_percentage}% OFF
+        </div>
+      )}
+
       {/* Image Background */}
       <Image
         src={product.images[0]}
@@ -69,9 +81,23 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
         <h3 className="text-lg font-bold">
           {product.name}
         </h3>
-        <p className="text-xl font-extrabold mt-1">
-          ${product.price.toFixed(2)}
-        </p>
+        
+        {/* Price section */}
+        {hasDiscount ? (
+          <div className="flex items-baseline gap-2 mt-1">
+            <p className="text-xl font-extrabold text-red">
+              ${discountedPrice.toFixed(2)}
+            </p>
+            <p className="text-sm font-light line-through text-gray-300">
+              ${product.price.toFixed(2)}
+            </p>
+          </div>
+        ) : (
+          <p className="text-xl font-extrabold mt-1">
+            ${product.price.toFixed(2)}
+          </p>
+        )}
+
         <div className="mt-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
           <button 
               className={`px-3 py-1 text-xs font-medium rounded ${isAdded ? 'bg-green-600' : 'bg-white text-black hover:bg-gray-200'}`}

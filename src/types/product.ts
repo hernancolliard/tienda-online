@@ -9,6 +9,7 @@ export interface Product {
   is_featured: boolean;
   stock_quantity: number;
   sizes: string[]; // Assuming sizes are stored as an array of strings
+  discount_percentage?: number;
   created_at: string;
   updated_at: string;
 }

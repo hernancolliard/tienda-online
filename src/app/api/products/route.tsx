@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = req.nextUrl;
     const featuredOnly = searchParams.get('featured') === 'true';
+    const discounted = searchParams.get('discounted') === 'true';
     const categoryId = searchParams.get('category_id');
     const searchQuery = searchParams.get('query');
     const minPrice = searchParams.get('minPrice');
@@ -30,6 +31,10 @@ export async function GET(req: NextRequest) {
 
     if (featuredOnly) {
       conditions.push('p.is_featured = true');
+    }
+
+    if (discounted) {
+      conditions.push('p.discount_percentage > 0');
     }
 
     if (categoryId) {
@@ -112,6 +117,7 @@ export async function POST(req: NextRequest) {
       category_id,
       stock_quantity,
       sizes,
+      discount_percentage,
     } = body;
 
     if (!name || !price || !category_id) {
@@ -119,10 +125,10 @@ export async function POST(req: NextRequest) {
     }
 
     const { rows } = await db.query(
-      `INSERT INTO products (name, description, price, images, category_id, stock_quantity, sizes)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `INSERT INTO products (name, description, price, images, category_id, stock_quantity, sizes, discount_percentage)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING *`,
-      [name, description, parseFloat(price), images, parseInt(category_id), parseInt(stock_quantity), sizes]
+      [name, description, parseFloat(price), images, parseInt(category_id), parseInt(stock_quantity), sizes, parseInt(discount_percentage) || 0]
     );
 
     const newProduct = rows[0];

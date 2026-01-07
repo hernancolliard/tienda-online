@@ -5,14 +5,14 @@ import Hero from '@/components/Hero';
 import CategoryListHome from '@/components/CategoryListHome';
 import Benefits from '@/components/Benefits';
 import NewArrivals from '@/components/NewArrivals';
+import DiscountedProducts from '@/components/DiscountedProducts';
 import AboutBrand from '@/components/AboutBrand';
 import Testimonials from '@/components/Testimonials';
 import Newsletter from '@/components/Newsletter';
-import InstagramFeed from '@/components/InstagramFeed'; // Import InstagramFeed
+import InstagramFeed from '@/components/InstagramFeed';
 
-export const dynamic = 'force-dynamic'; // Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
 
-// This is a Server Component, so we can fetch data directly.
 async function getFeaturedProducts(): Promise<Product[]> {
   try {
     const { rows } = await db.query('SELECT * FROM products WHERE is_featured = true ORDER BY created_at DESC');
@@ -45,9 +45,10 @@ export default async function Home() {
 
       <Benefits />
       <NewArrivals />
+      <DiscountedProducts />
       <AboutBrand />
       <Testimonials />
-      <InstagramFeed /> {/* Add InstagramFeed here */}
+      <InstagramFeed />
       <Newsletter />
     </>
   );

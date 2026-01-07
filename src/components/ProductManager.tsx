@@ -2,7 +2,7 @@
 
 import { useState, useEffect, FormEvent, useRef, DragEvent } from "react";
 import Image from "next/image";
-// Extiende la interfaz para incluir todos los campos del formulario
+
 interface Product {
   id: number;
   name: string;
@@ -10,10 +10,11 @@ interface Product {
   price: number;
   images: string[];
   category_id: number;
-  category_name?: string; // El GET principal lo trae
+  category_name?: string;
   stock_quantity: number;
   sizes: string[];
   is_featured: boolean;
+  discount_percentage?: number;
 }
 
 interface Category {
@@ -25,10 +26,11 @@ const initialFormState = {
   name: "",
   description: "",
   price: "",
-  images: [] as string[], // Now an array of base64 strings
+  images: [] as string[],
   category_id: "",
   stock_quantity: "0",
-  sizes: "", // Comma-separated sizes
+  sizes: "",
+  discount_percentage: "0",
 };
 
 export default function ProductManager() {
@@ -38,7 +40,6 @@ export default function ProductManager() {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // State para el formulario y para saber si estamos editando
   const [formState, setFormState] = useState(initialFormState);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -88,7 +89,7 @@ export default function ProductManager() {
       reader.onloadend = () => {
         if (reader.result && typeof reader.result === "string") {
           newImagePreviews.push(reader.result);
-          newBase64Images.push(reader.result); // Store base64 string
+          newBase64Images.push(reader.result);
           if (newImagePreviews.length === fileArray.length) {
             setImagePreviews((prev) => [...prev, ...newImagePreviews]);
             setFormState((prevState) => ({
@@ -122,7 +123,7 @@ export default function ProductManager() {
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    e.stopPropagation(); // Necessary to allow dropping
+    e.stopPropagation();
   };
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
@@ -136,14 +137,12 @@ export default function ProductManager() {
   };
 
   const handleDeleteImage = (index: number) => {
-    // Create new arrays with the image removed
     const newImagePreviews = [...imagePreviews];
     newImagePreviews.splice(index, 1);
 
     const newBase64Images = [...formState.images];
     newBase64Images.splice(index, 1);
 
-    // Update the state
     setImagePreviews(newImagePreviews);
     setFormState((prevState) => ({
       ...prevState,
@@ -160,12 +159,10 @@ export default function ProductManager() {
       price: parseFloat(formState.price),
       stock_quantity: parseInt(formState.stock_quantity, 10),
       category_id: parseInt(formState.category_id, 10),
-      images: formState.images, // Already an array of base64 strings
-      sizes: formState.sizes
-        .split(",")
-        .map((s) => s.trim())
-        .filter((s) => s),
+      images: formState.images,
+      sizes: formState.sizes.split(",").map((s) => s.trim()).filter((s) => s),
       is_featured: editingProduct ? editingProduct.is_featured : false,
+      discount_percentage: parseInt(formState.discount_percentage, 10) || 0,
     };
 
     if (!productData.name || !productData.price || !productData.category_id) {
@@ -187,8 +184,7 @@ export default function ProductManager() {
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(
-          errorData.message ||
-            `No se pudo ${editingProduct ? "actualizar" : "crear"} el producto.`
+          errorData.message || `No se pudo ${editingProduct ? "actualizar" : "crear"} el producto.`
         );
       }
 
@@ -206,12 +202,13 @@ export default function ProductManager() {
       name: product.name,
       description: product.description || "",
       price: String(product.price),
-      images: product.images || [], // Ensure it's an array
+      images: product.images || [],
       category_id: String(product.category_id),
       stock_quantity: String(product.stock_quantity),
       sizes: (product.sizes || []).join(", "),
+      discount_percentage: String(product.discount_percentage || 0),
     });
-    setImagePreviews(product.images || []); // Set image previews for editing
+    setImagePreviews(product.images || []);
     setIsModalOpen(true);
   };
 
@@ -219,7 +216,7 @@ export default function ProductManager() {
     setError(null);
     setEditingProduct(null);
     setFormState(initialFormState);
-    setImagePreviews([]); // Clear previews for new product
+    setImagePreviews([]);
     setIsModalOpen(true);
   };
 
@@ -227,7 +224,7 @@ export default function ProductManager() {
     setIsModalOpen(false);
     setEditingProduct(null);
     setFormState(initialFormState);
-    setImagePreviews([]); // Clear previews on close
+    setImagePreviews([]);
   };
 
   const handleDelete = async (id: number) => {
@@ -246,6 +243,10 @@ export default function ProductManager() {
     } catch (err: any) {
       setError(err.message);
     }
+  };
+
+  const calculateDiscountedPrice = (price: number, discount: number) => {
+    return price - (price * discount) / 100;
   };
 
   return (
@@ -271,7 +272,8 @@ export default function ProductManager() {
               <tr>
                 <th className="py-2 px-4 border-b border-primary-text/20">Nombre</th>
                 <th className="py-2 px-4 border-b border-primary-text/20">Categoría</th>
-                <th className="py-2 px-4 border-b border-primary-text/20">Precio</th>
+                <th className="py-2 px-4 border-b border-primary-text/20">Precio Original</th>
+                <th className="py-2 px-4 border-b border-primary-text/20">Precio Descuento</th>
                 <th className="py-2 px-4 border-b border-primary-text/20">Acciones</th>
               </tr>
             </thead>
@@ -286,6 +288,13 @@ export default function ProductManager() {
                   </td>
                   <td className="py-2 px-4 border-b border-primary-text/10 text-center">
                     ${product.price}
+                  </td>
+                  <td className="py-2 px-4 border-b border-primary-text/10 text-center">
+                    {product.discount_percentage && product.discount_percentage > 0 ? (
+                      `$${calculateDiscountedPrice(product.price, product.discount_percentage).toFixed(2)} (${product.discount_percentage}%)`
+                    ) : (
+                      'N/A'
+                    )}
                   </td>
                   <td className="py-2 px-4 border-b border-primary-text/10 text-center">
                     <div className="flex justify-center gap-2">
@@ -317,181 +326,58 @@ export default function ProductManager() {
               {editingProduct ? "Editar Producto" : "Añadir Nuevo Producto"}
             </h3>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Form fields */}
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Nombre
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  value={formState.name}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text"
-                  required
-                />
+                <label htmlFor="name" className="block text-sm font-medium mb-1">Nombre</label>
+                <input id="name" name="name" type="text" value={formState.name} onChange={handleInputChange} className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text" required />
               </div>
               <div>
-                <label
-                  htmlFor="description"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Descripción
-                </label>
-                <textarea
-                  id="description"
-                  name="description"
-                  value={formState.description}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text"
-                />
+                <label htmlFor="description" className="block text-sm font-medium mb-1">Descripción</label>
+                <textarea id="description" name="description" value={formState.description} onChange={handleInputChange} className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="price" className="block text-sm font-medium mb-1">Precio</label>
+                  <input id="price" name="price" type="number" step="0.01" value={formState.price} onChange={handleInputChange} className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text" required />
+                </div>
+                <div>
+                  <label htmlFor="discount_percentage" className="block text-sm font-medium mb-1">Descuento (%)</label>
+                  <input id="discount_percentage" name="discount_percentage" type="number" value={formState.discount_percentage} onChange={handleInputChange} className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text" />
+                </div>
               </div>
               <div>
-                <label
-                  htmlFor="price"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Precio
-                </label>
-                <input
-                  id="price"
-                  name="price"
-                  type="number"
-                  step="0.01"
-                  value={formState.price}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="category_id"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Categoría
-                </label>
-                <select
-                  id="category_id"
-                  name="category_id"
-                  value={formState.category_id}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text"
-                  required
-                >
-                  <option value="" disabled>
-                    Selecciona una categoría
-                  </option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
+                <label htmlFor="category_id" className="block text-sm font-medium mb-1">Categoría</label>
+                <select id="category_id" name="category_id" value={formState.category_id} onChange={handleInputChange} className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text" required>
+                  <option value="" disabled>Selecciona una categoría</option>
+                  {categories.map((cat) => (<option key={cat.id} value={cat.id}>{cat.name}</option>))}
                 </select>
               </div>
               <div>
-                <label
-                  htmlFor="stock_quantity"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Cantidad (Stock)
-                </label>
-                <input
-                  id="stock_quantity"
-                  name="stock_quantity"
-                  type="number"
-                  value={formState.stock_quantity}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text"
-                />
+                <label htmlFor="stock_quantity" className="block text-sm font-medium mb-1">Cantidad (Stock)</label>
+                <input id="stock_quantity" name="stock_quantity" type="number" value={formState.stock_quantity} onChange={handleInputChange} className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text" />
               </div>
               <div>
-                <label
-                  htmlFor="sizes"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Talles (separados por coma)
-                </label>
-                <input
-                  id="sizes"
-                  name="sizes"
-                  type="text"
-                  value={formState.sizes}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text"
-                />
+                <label htmlFor="sizes" className="block text-sm font-medium mb-1">Talles (separados por coma)</label>
+                <input id="sizes" name="sizes" type="text" value={formState.sizes} onChange={handleInputChange} className="w-full p-2 border border-primary-text/20 rounded-md bg-background text-primary-text" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Imágenes
-                </label>
-                <input
-                  id="images"
-                  name="images"
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  className="hidden" // Hide the default file input
-                />
-                <div
-                  onDragEnter={handleDragEnter}
-                  onDragLeave={handleDragLeave}
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}
-                  onClick={() => fileInputRef.current?.click()}
-                  className={`w-full p-6 border-2 border-dashed rounded-md cursor-pointer text-center transition-colors
-                    ${
-                      isDragging
-                        ? "border-primary-text bg-primary-text/10"
-                        : "border-primary-text/30 bg-background hover:bg-black/5"
-                    }`}
-                >
-                  <p className="text-primary-text/70">
-                    Arrastra y suelta imágenes aquí, o haz clic para seleccionar
-                  </p>
+                <label className="block text-sm font-medium mb-1">Imágenes</label>
+                <input id="images" name="images" type="file" multiple accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+                <div onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} onDragOver={handleDragOver} onDrop={handleDrop} onClick={() => fileInputRef.current?.click()} className={`w-full p-6 border-2 border-dashed rounded-md cursor-pointer text-center transition-colors ${isDragging ? "border-primary-text bg-primary-text/10" : "border-primary-text/30 bg-background hover:bg-black/5"}`}>
+                  <p className="text-primary-text/70">Arrastra y suelta imágenes aquí, o haz clic para seleccionar</p>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {imagePreviews.map((src, index) => (
                     <div key={src} className="relative">
-                      <Image
-                        key={index}
-                        src={src}
-                        alt={`Preview ${index}`}
-                        width={96}
-                        height={96}
-                        className="object-cover rounded-md"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteImage(index)}
-                        className="absolute top-1 right-1 bg-background text-red border border-red rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold hover:bg-red/10"
-                        aria-label="Eliminar imagen"
-                      >
-                        X
-                      </button>
+                      <Image key={index} src={src} alt={`Preview ${index}`} width={96} height={96} className="object-cover rounded-md" />
+                      <button type="button" onClick={() => handleDeleteImage(index)} className="absolute top-1 right-1 bg-background text-red border border-red rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold hover:bg-red/10" aria-label="Eliminar imagen">X</button>
                     </div>
                   ))}
                 </div>
               </div>
               <div className="flex justify-end gap-4 pt-4">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="px-4 py-2 bg-primary-text/20 rounded-md hover:bg-primary-text/30"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-primary-text text-white rounded-md hover:opacity-90"
-                >
-                  {editingProduct ? "Guardar Cambios" : "Guardar Producto"}
-                </button>
+                <button type="button" onClick={closeModal} className="px-4 py-2 bg-primary-text/20 rounded-md hover:bg-primary-text/30">Cancelar</button>
+                <button type="submit" className="px-4 py-2 bg-primary-text text-white rounded-md hover:opacity-90">{editingProduct ? "Guardar Cambios" : "Guardar Producto"}</button>
               </div>
             </form>
           </div>

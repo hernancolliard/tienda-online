@@ -22,7 +22,8 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       category_id,
       stock_quantity,
       sizes,
-      is_featured, // Incluimos para futura gestión de destacados
+      is_featured,
+      discount_percentage,
     } = body;
 
     if (!name || !price || !category_id) {
@@ -38,10 +39,11 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         category_id = $5, 
         stock_quantity = $6, 
         sizes = $7,
-        is_featured = $8
-       WHERE id = $9 
+        is_featured = $8,
+        discount_percentage = $9
+       WHERE id = $10 
        RETURNING *`,
-      [name, description, parseFloat(price), images, parseInt(category_id), parseInt(stock_quantity), sizes, is_featured, id]
+      [name, description, parseFloat(price), images, parseInt(category_id), parseInt(stock_quantity), sizes, is_featured, parseInt(discount_percentage) || 0, id]
     );
 
     if (rows.length === 0) {
