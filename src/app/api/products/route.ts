@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { Resend } from 'resend';
-import NewProductEmail from '@/components/emails/NewProductEmail';
+import { NewProductEmail } from '@/components/emails/NewProductEmail';
+import React from 'react';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const fromEmail = process.env.EMAIL_FROM || 'onboarding@resend.dev';
@@ -139,12 +140,12 @@ export async function POST(req: NextRequest) {
           from: fromEmail,
           to: emails, // Resend maneja el envío a múltiples destinatarios
           subject: '¡Nuevo producto disponible!',
-          react: NewProductEmail({
-            productName: newProduct.name,
-            productDescription: newProduct.description,
-            productImage: newProduct.images && newProduct.images.length > 0 ? newProduct.images[0] : '',
-            productUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/category/${newProduct.category_id}`,
-          }),
+          react: <NewProductEmail
+            productName={newProduct.name}
+            productDescription={newProduct.description}
+            productImage={newProduct.images && newProduct.images.length > 0 ? newProduct.images[0] : ''}
+            productUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/category/${newProduct.category_id}`}
+          />,
         });
 
         console.log('Correos de nuevo producto enviados exitosamente.');
