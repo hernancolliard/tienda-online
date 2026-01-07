@@ -5,7 +5,7 @@ async function getNewestProducts(): Promise<Product[]> {
   try {
     // The default API endpoint sorts by newest first.
     // We fetch all and slice, but a limit could be added to the API.
-    const res = await fetch(`/api/products`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`, {
       cache: 'no-store', // Always fetch the latest
     });
     

@@ -11,7 +11,7 @@ interface InstagramPost {
 
 async function getInstagramPosts(): Promise<InstagramPost[]> {
   try {
-    const res = await fetch(`/api/instagram`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/instagram`, {
       cache: 'no-store',
     });
     if (!res.ok) {

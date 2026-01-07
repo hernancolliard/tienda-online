@@ -8,7 +8,7 @@ interface Category {
 
 async function getCategories(): Promise<Category[]> {
   try {
-    const res = await fetch(`/api/categories`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`, {
       cache: 'no-store', // Always fetch the latest
     });
     
