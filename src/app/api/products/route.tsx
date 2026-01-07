@@ -147,7 +147,7 @@ export async function POST(req: NextRequest) {
           from: fromEmail,
           to: emails, // Resend maneja el envío a múltiples destinatarios
           subject: '¡Nuevo producto disponible!',
-          html: render(<NewProductEmail
+          html: await render(<NewProductEmail
             productName={newProduct.name}
             productDescription={newProduct.description}
             productImage={newProduct.images && newProduct.images.length > 0 ? newProduct.images[0] : ''}
